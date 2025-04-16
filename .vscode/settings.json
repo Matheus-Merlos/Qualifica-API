@@ -1,0 +1,9 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.addMissingImports.ts": "always",
+    "source.fixAll.eslint": "always",
+    "source.fixAll.ts": "always",
+    "source.sortImports": "always"
+  },
+  "editor.tabSize": 2
+}
