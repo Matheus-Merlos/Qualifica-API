@@ -1,0 +1,14 @@
+name: Deploy para ambiente de test
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello, World
+        run: echo "Hello, World!"
+
