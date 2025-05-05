@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-and-push-image:
+    name: Build e Push da Imagem
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -29,3 +30,31 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: ${{ secrets.DOCKER_USERNAME }}/qualifica-api:v${{ github.run_number }}
+
+  get-server-ssh-key:
+    name: Pegar a chave SSH do servidor
+    runs-on: ubuntu-latest
+    outputs:
+      server_ssh_key: ${{ steps.define-variables.outputs.server_ssh_key }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.TERRAFORM_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TERRAFORM_AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: 'us-east-1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+
+      - name: Get current server DNS and export to a variable
+        id: define-variables
+        run: |
+          cd terraform
+
+          terraform init
+
+          echo "server_ssh_key=$(terraform output -raw server_private_key)" >> $GITHUB_OUTPUT
