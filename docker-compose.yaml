@@ -1,4 +1,12 @@
 services:
+  qualificamais-api:
+    container_name: qualifica-api
+    image: matheusazr/qualifica-api:latest
+    ports:
+      - "80:3000"
+    env_file:
+      - .env
+    restart: unless-stopped
   database:
     container_name: qualifica-database
     image: postgres:17.5-alpine3.21
