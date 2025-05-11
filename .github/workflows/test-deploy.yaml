@@ -29,6 +29,7 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:v${{ github.run_number }}
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:latest
