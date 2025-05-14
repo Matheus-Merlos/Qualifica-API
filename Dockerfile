@@ -32,4 +32,4 @@ WORKDIR /api
 COPY --from=deps node_modules ./node_modules
 COPY --from=build dist .
 
-CMD [ "node", "main" ]
+CMD [ "sh", "-c", "npx drizzle-kit push && node src/main" ]

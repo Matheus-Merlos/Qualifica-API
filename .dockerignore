@@ -10,4 +10,3 @@ eslint.config.mjs
 nest-cli.json
 *.md
 .gitignore
-*.config.ts

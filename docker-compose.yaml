@@ -8,7 +8,7 @@ services:
       - .env
     restart: unless-stopped
   database:
-    container_name: qualifica-database
+    container_name: ${POSTGRES_HOST}
     image: postgres:17.5-alpine3.21
     ports:
       - "10133:5432"
