@@ -3,12 +3,11 @@ import {
   integer,
   pgTable,
   text,
-  time,
   varchar,
 } from 'drizzle-orm/pg-core';
 import courseSection from './course-section';
 
-export default pgTable('lesson', {
+export default pgTable('course_additional', {
   id: bigserial({ mode: 'number' }).primaryKey(),
   courseSection: integer()
     .notNull()
@@ -16,8 +15,7 @@ export default pgTable('lesson', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  url: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
-  duration: time().notNull(),
-  description: text({}),
+  url: varchar({ length: 511 }),
+  description: text(),
 });

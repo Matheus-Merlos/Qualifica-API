@@ -1,14 +1,7 @@
-import {
-  bigserial,
-  integer,
-  pgTable,
-  text,
-  time,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { bigserial, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
 import courseSection from './course-section';
 
-export default pgTable('lesson', {
+export default pgTable('exam', {
   id: bigserial({ mode: 'number' }).primaryKey(),
   courseSection: integer()
     .notNull()
@@ -16,8 +9,5 @@ export default pgTable('lesson', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  url: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
-  duration: time().notNull(),
-  description: text({}),
 });
