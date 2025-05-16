@@ -1,0 +1,15 @@
+services:
+  database:
+    container_name: qualifica-database
+    image: postgres:17.5-alpine3.21
+    ports:
+      - "10133:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+
+volumes:
+  postgresdata:
