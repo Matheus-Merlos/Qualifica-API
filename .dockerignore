@@ -1,0 +1,13 @@
+node_modules
+terraform
+dist
+.vscode
+.github
+.env
+.editorconfig
+.prettierrc
+eslint.config.mjs
+nest-cli.json
+*.md
+.gitignore
+*.config.ts
