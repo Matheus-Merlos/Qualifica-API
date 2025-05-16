@@ -19,5 +19,5 @@ export default pgTable('lesson', {
   url: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
   duration: time().notNull(),
-  description: text({}),
+  description: text(),
 });

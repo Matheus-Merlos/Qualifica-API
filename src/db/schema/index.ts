@@ -8,7 +8,7 @@ import lesson from './lesson';
 import ordination from './ordination';
 import progression from './progression';
 import question from './question';
-import questionOptions from './question-options';
+import questionOption from './question-option';
 import studentAnswer from './student-answer';
 import subscription from './subscription';
 import user from './user';
@@ -24,7 +24,7 @@ export {
   ordination,
   progression,
   question,
-  questionOptions,
+  questionOption,
   studentAnswer,
   subscription,
   user,
