@@ -10,5 +10,5 @@ export default pgTable('question', {
       onUpdate: 'cascade',
     }),
   questionText: text().notNull(),
-  correctAwnser: integer().notNull(),
+  correctAnswer: integer().notNull(),
 });
