@@ -1,7 +1,7 @@
 import { bigserial, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
 import course from './course';
 
-export default pgTable('course-tag', {
+export default pgTable('course_tag', {
   id: bigserial({ mode: 'number' }).primaryKey(),
   course: integer()
     .notNull()
