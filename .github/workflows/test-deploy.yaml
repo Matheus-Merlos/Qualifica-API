@@ -35,6 +35,8 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:v${{ github.run_number }}
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/qualifica-api:latest
+          cache-to: type=inline
 
   get-server-ssh-key:
     name: Pegar a chave SSH do servidor
@@ -113,4 +115,4 @@ jobs:
             cd /home/admin/qualificamais-api
             echo "${{ secrets.DOTENV_CONTENT }}" > .env
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-            sudo docker compose up -d
+            sudo docker compose up --pull always -d
