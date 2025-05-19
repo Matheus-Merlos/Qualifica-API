@@ -125,7 +125,8 @@ jobs:
       - name: Send message
         uses: appleboy/discord-action@v1.2.0
         with:
-          webhook_url: ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK }}
+          webhook_id: ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK_TOKEN }}
           message: |
             ## :package: Novo Deployment para o ambiente de **Test**
             > ✦ **Versão da imagem:** ${{ github.run_number }}
