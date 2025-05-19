@@ -12,7 +12,8 @@ jobs:
       - name: Send message
         uses: appleboy/discord-action@v1.2.0
         with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+          webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           message: |
             ## :compression: Novo PR Aberto!
             > ✦ **Título:** ${{ github.event.pull_request.title }}
