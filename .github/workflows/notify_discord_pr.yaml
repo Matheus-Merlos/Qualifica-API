@@ -1,0 +1,20 @@
+name: Enviar msg no discord ao abrir PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    name: Enviar mensagem
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message
+        uses: appleboy/discord-action@v1.2.0
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          message: |
+            ## :compression: Novo PR Aberto!
+            > ✦ **Título:** ${{ github.event.pull_request.title }}
+            > ✦ **Link:** ${{ github.event.pull_request.html_url }}
+            > ✦ **Autor:** [${{ github.event.pull_request.user.login }}](https://github.com/${{ github.event.pull_request.user.login }}
