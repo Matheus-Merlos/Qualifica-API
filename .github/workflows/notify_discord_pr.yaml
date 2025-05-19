@@ -16,6 +16,7 @@ jobs:
           webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
           message: |
             ## :compression: Novo PR Aberto!
+            @quero_quero_paranaense @azure_flare
             > ✦ **Título:** ${{ github.event.pull_request.title }}
             > ✦ **Link:** ${{ github.event.pull_request.html_url }}
             > ✦ **Autor:** **${{ github.event.pull_request.user.login }}**
