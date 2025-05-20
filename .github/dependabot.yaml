@@ -4,5 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    security-updates-only: true
-
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "fix"
+      include: "scope"
+    rebase-strategy: "auto"
