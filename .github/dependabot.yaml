@@ -9,3 +9,6 @@ updates:
       prefix: "fix"
       include: "scope"
     rebase-strategy: "auto"
+    allow:
+      - dependency-type: "direct"
+    security-updates-only: true
