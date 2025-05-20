@@ -7,6 +7,8 @@ resource "aws_iam_user" "deployer" {
 }
 
 data "aws_iam_policy_document" "deployer_policy" {
+
+  //Policy para ler o Bucket de estado (todos os usuários IAM que usarem terraform precisam disso)
   statement {
     effect = "Allow"
     actions = [
@@ -20,6 +22,7 @@ data "aws_iam_policy_document" "deployer_policy" {
     ]
   }
 
+  //Policies para pegar o IP público da instância EC2 (para fazer SSH nas GitHub Actions)
   statement {
     effect = "Allow"
     actions = [
@@ -27,6 +30,28 @@ data "aws_iam_policy_document" "deployer_policy" {
       "ec2:List*"
     ]
     resources = ["*"]
+  }
+
+  //Policy para fazer o deploy da aplicação React (fica no Qualifica-Front)
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:ListBucket",
+      "s3:PutObjectAcl",
+      "s3:DeleteObject"
+    ]
+    resources = [ "*" ]
+  }
+
+  //Criar invalidação cloudfront (AKA Limpar o cache)
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudfront:CreateInvalidation"
+    ]
+    resources = [ "*" ]
   }
 }
 
