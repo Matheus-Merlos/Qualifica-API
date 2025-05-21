@@ -1,7 +1,7 @@
 services:
   qualificamais-api:
     container_name: qualifica-api
-    image: matheusazr/qualifica-api:latest
+    image: ${DOCKER_USERNAME}/qualifica-api:latest
     ports:
       - "80:3000"
     env_file:
@@ -11,7 +11,7 @@ services:
     container_name: ${POSTGRES_HOST}
     image: postgres:15.13-alpine3.21
     ports:
-      - "10133:5432"
+      - "${POSTGRES_PORT}:5432"
     env_file:
       - .env
     volumes:
