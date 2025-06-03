@@ -2,8 +2,8 @@ import { IsBoolean, IsString } from 'class-validator';
 
 export class AlternativeDto {
   @IsString()
-  description!: string;
+  description: string;
 
   @IsBoolean()
-  isTrue!: boolean;
+  isTrue: boolean;
 }

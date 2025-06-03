@@ -1,26 +1,24 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
-import { DRIZZLE } from '../db/database.module';
+import db from 'src/db';
 import {
-  alternativeTable,
-  examTable,
-  questionTable,
+  alternative as alternativeTable,
+  exam as examTable,
+  question as questionTable,
 } from '../db/schema';
 import { CreateExamDto, UpdateExamDto } from './dto';
 
 @Injectable()
 export class ExamService {
-  constructor(@Inject(DRIZZLE) private db: any) {}
-
   /* CREATE */
   async create(sectionId: number, dto: CreateExamDto) {
-    const [exam] = await this.db
+    const [exam] = await db
       .insert(examTable)
-      .values({ sectionId, name: dto.examName })
+      .values({ courseSection: sectionId, name: dto.examName })
       .returning();
 
     for (const q of dto.questions) {
-      const [question] = await this.db
+      const [question] = await db
         .insert(questionTable)
         .values({ examId: exam.id, text: q.question })
         .returning();
@@ -30,7 +28,7 @@ export class ExamService {
         description: a.description,
         isTrue: a.isTrue,
       }));
-      await this.db.insert(alternativeTable).values(altRows);
+      await db.insert(alternativeTable).values(altRows);
     }
 
     return { id: exam.id };
@@ -38,23 +36,25 @@ export class ExamService {
 
   /* READ → all exams for a section */
   findAllBySection(sectionId: number) {
-    return this.db
+    return db
       .select()
       .from(examTable)
-      .where(eq(examTable.sectionId, sectionId));
+      .where(eq(examTable.courseSection, sectionId));
   }
 
   /* READ → one exam with questions + alternatives */
   async findOne(sectionId: number, examId: number) {
-    const [exam] = await this.db
+    const [exam] = await db
       .select()
       .from(examTable)
-      .where(and(eq(examTable.id, examId), eq(examTable.sectionId, sectionId)))
+      .where(
+        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
+      )
       .limit(1);
 
     if (!exam) throw new NotFoundException('Exam not found');
 
-    const rows = await this.db
+    const rows = await db
       .select({
         qId: questionTable.id,
         question: questionTable.text,
@@ -63,14 +63,21 @@ export class ExamService {
         isTrue: alternativeTable.isTrue,
       })
       .from(questionTable)
-      .leftJoin(alternativeTable, eq(alternativeTable.questionId, questionTable.id))
+      .leftJoin(
+        alternativeTable,
+        eq(alternativeTable.questionId, questionTable.id),
+      )
       .where(eq(questionTable.examId, examId));
 
     // agrega alternativas por questão
     const map = new Map<number, any>();
     for (const r of rows) {
       if (!map.has(r.qId)) {
-        map.set(r.qId, { questionId: r.qId, question: r.question, alternatives: [] });
+        map.set(r.qId, {
+          questionId: r.qId,
+          question: r.question,
+          alternatives: [],
+        });
       }
       if (r.aId) {
         map.get(r.qId).alternatives.push({
@@ -86,18 +93,22 @@ export class ExamService {
 
   /* UPDATE → só examName por enquanto */
   async update(sectionId: number, examId: number, dto: UpdateExamDto) {
-    await this.db
+    await db
       .update(examTable)
       .set({ name: dto.examName })
-      .where(and(eq(examTable.id, examId), eq(examTable.sectionId, sectionId)));
+      .where(
+        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
+      );
     return this.findOne(sectionId, examId);
   }
 
   /* DELETE */
   async remove(sectionId: number, examId: number) {
-    await this.db
+    await db
       .delete(examTable)
-      .where(and(eq(examTable.id, examId), eq(examTable.sectionId, sectionId)));
+      .where(
+        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
+      );
     return { deleted: true };
   }
 }

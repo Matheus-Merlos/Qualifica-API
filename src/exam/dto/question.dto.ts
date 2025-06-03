@@ -4,9 +4,9 @@ import { AlternativeDto } from './alternative.dto';
 
 export class QuestionDto {
   @IsString()
-  question!: string;
+  question: string;
 
   @ValidateNested({ each: true })
   @Type(() => AlternativeDto)
-  alternatives!: AlternativeDto[];
+  alternatives: AlternativeDto[];
 }

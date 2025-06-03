@@ -4,9 +4,9 @@ import { QuestionDto } from './question.dto';
 
 export class CreateExamDto {
   @IsString()
-  examName!: string;
+  examName: string;
 
   @ValidateNested({ each: true })
   @Type(() => QuestionDto)
-  questions!: QuestionDto[];
+  questions: QuestionDto[];
 }
