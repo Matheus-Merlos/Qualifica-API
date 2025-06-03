@@ -1,6 +1,7 @@
+import alternative from './alternative';
 import comment from './comment';
 import course from './course';
-import courseAddional from './course-addional';
+import courseAddional from './course-additional';
 import courseSection from './course-section';
 import courseTag from './course-tag';
 import exam from './exam';
@@ -14,7 +15,7 @@ import subscription from './subscription';
 import user from './user';
 
 export {
-  comment,
+  alternative, comment,
   course,
   courseAddional,
   courseSection,
@@ -27,5 +28,6 @@ export {
   questionOption,
   studentAnswer,
   subscription,
-  user,
+  user
 };
+
