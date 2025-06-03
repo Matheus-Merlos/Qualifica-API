@@ -116,3 +116,18 @@ jobs:
             echo "${{ secrets.DOTENV_CONTENT }}" > .env
             echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             sudo docker compose up --pull always -d
+
+  enviar-mensagem:
+    name: Enviar mensagem
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DEPLOY_CHANNEL_DISCORD_WEBHOOK }}
+        with:
+          args: |
+            ## :package: Novo Deployment para o ambiente de **Test**
+            > ✦ **Versão da imagem:** ${{ github.run_number }}
+            > ✦ **Link:** https://api.test.qualificamais.app.br/
+            > ✦ **Autor:** **${{ github.actor }}**
