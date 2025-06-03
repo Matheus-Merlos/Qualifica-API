@@ -15,7 +15,8 @@ import subscription from './subscription';
 import user from './user';
 
 export {
-  alternative, comment,
+  alternative,
+  comment,
   course,
   courseAddional,
   courseSection,

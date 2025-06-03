@@ -1,12 +1,23 @@
-import { boolean, integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { questionTable } from './question';
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
+import {
+  boolean,
+  integer,
+  pgTable,
+  serial,
+  varchar,
+} from 'drizzle-orm/pg-core';
+import { default as questionTable } from './question';
 
-export const alternativeTable = pgTable('alternative', {
+const alternativeTable = pgTable('alternative', {
   id: serial('id').primaryKey(),
-  questionId: integer('question_id').references(() => questionTable.id).notNull(),
+  questionId: integer('question_id')
+    .references(() => questionTable.id)
+    .notNull(),
   description: varchar('description', { length: 255 }).notNull(),
   isTrue: boolean('is_true').notNull(),
 });
 
-export type Alternative = typeof alternativeTable.$inferSelect;
-export type NewAlternative = typeof alternativeTable.$inferInsert;
+export type Alternative = InferSelectModel<typeof alternativeTable>;
+export type NewAlternative = InferInsertModel<typeof alternativeTable>;
+
+export default alternativeTable;

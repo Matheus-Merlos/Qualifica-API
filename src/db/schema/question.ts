@@ -1,9 +1,11 @@
 import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { examTable } from './exam';
+import { default as examTable } from './exam';
 
 export const questionTable = pgTable('question', {
   id: serial('id').primaryKey(),
-  examId: integer('exam_id').references(() => examTable.id).notNull(),
+  examId: integer('exam_id')
+    .references(() => examTable.id)
+    .notNull(),
   text: varchar('text', { length: 255 }).notNull(),
 });
 

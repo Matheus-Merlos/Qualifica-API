@@ -1,10 +1,10 @@
 import { bigserial, integer, pgTable, unique } from 'drizzle-orm/pg-core';
-import { courseAdditionalTable } from './course-additional';
-import { courseSectionTable } from './course-section';
-import { examTable } from './exam';
-import { lessonTable } from './lesson';
+import { default as courseAdditionalTable } from './course-additional';
+import { default as courseSectionTable } from './course-section';
+import { default as examTable } from './exam';
+import { default as lessonTable } from './lesson';
 
-export const ordinationTable = pgTable(
+export default pgTable(
   'ordination',
   {
     id: bigserial({ mode: 'number' }).primaryKey(),
