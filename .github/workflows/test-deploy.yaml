@@ -31,12 +31,12 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:v${{ github.run_number }}
             ${{ secrets.DOCKER_USERNAME }}/qualifica-api:latest
-          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/qualifica-api:latest
-          cache-to: type=inline
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   get-server-ssh-key:
     name: Pegar a chave SSH do servidor
@@ -58,7 +58,7 @@ jobs:
         with:
           terraform_version: 1.11.3
 
-      - name: Get and export ssh key
+      - name: Retrieve SSH key and server IP while masking both
         id: define-variables
         run: |
           cd terraform
@@ -67,12 +67,23 @@ jobs:
 
           terraform apply -refresh-only -auto-approve -target=aws_instance.qualificamais_server
 
+          SERVER_KEY=$(terraform output -raw server_private_key)
+          SERVER_IP=$(terraform output -raw)
+
+          # Mascara as informacoes sensiveis
+          while IFS= read -r line; do
+            if [[ -n "$line" ]]; then
+              echo "::add-mask::$line"
+            fi
+          done <<< "$SERVER_KEY"
+          echo "::add-mask::$SERVER_IP"
+
           {
             echo 'server_ssh_key<<EOF'
-            terraform output -raw server_private_key
+            echo "$SERVER_KEY"
             echo 'EOF'
           } >> $GITHUB_OUTPUT
-           echo "server_public_ip=$(terraform output -raw server_public_ip_address)" >> $GITHUB_OUTPUT
+           echo "server_public_ip="$SERVER_IP"" >> $GITHUB_OUTPUT
 
   deploy:
     name: Deploy da aplicação
