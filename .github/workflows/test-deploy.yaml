@@ -68,7 +68,7 @@ jobs:
           terraform apply -refresh-only -auto-approve -target=aws_instance.qualificamais_server
 
           SERVER_KEY=$(terraform output -raw server_private_key)
-          SERVER_IP=$(terraform output -raw)
+          SERVER_IP=$(terraform output -raw server_public_ip_address)
 
           # Mascara as informacoes sensiveis
           while IFS= read -r line; do
