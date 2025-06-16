@@ -79,6 +79,7 @@ jobs:
   deploy:
     name: Deploy da aplicação
     runs-on: ubuntu-latest
+    if: ${{ success() }}
     needs: [get-server-ssh-key, build-and-push-image]
     steps:
       - name: Checkout code
@@ -150,6 +151,7 @@ jobs:
   enviar-mensagem:
     name: Enviar mensagem
     needs: [deploy]
+    if: ${{ success() }}
     runs-on: ubuntu-latest
     steps:
       - name: Send message
