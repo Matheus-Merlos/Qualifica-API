@@ -60,3 +60,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 terraform.tfvars
 *.tfstate
 *.tfplan
+
+sensitive.auto.tfvars
