@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { and, eq } from 'drizzle-orm';
+import { Injectable } from '@nestjs/common';
+import { and, eq, InferSelectModel } from 'drizzle-orm';
+import { TransactionError } from 'src/app.exceptions';
 import db from 'src/db';
 import {
   alternative as alternativeTable,
@@ -12,26 +13,34 @@ import { CreateExamDTO, UpdateExamDTO } from './exam.dto';
 export class ExamService {
   /* CREATE */
   async create(sectionId: number, dto: CreateExamDTO) {
-    const [exam] = await db
-      .insert(examTable)
-      .values({ courseSection: sectionId, name: dto.examName })
-      .returning();
+    let exam: InferSelectModel<typeof examTable> | null = null;
+    try {
+      await db.transaction(async (trx) => {
+        [exam] = await trx
+          .insert(examTable)
+          .values({ courseSection: sectionId, name: dto.examName })
+          .returning();
 
-    for (const q of dto.questions) {
-      const [question] = await db
-        .insert(questionTable)
-        .values({ examId: exam.id, text: q.question })
-        .returning();
+        for (const question of dto.questions) {
+          const [dbQuestion] = await trx
+            .insert(questionTable)
+            .values({ examId: exam.id, text: question.question })
+            .returning();
 
-      const altRows = q.alternatives.map((a) => ({
-        questionId: question.id,
-        description: a.description,
-        isTrue: a.isTrue,
-      }));
-      await db.insert(alternativeTable).values(altRows);
+          const altRows = question.alternatives.map((alternative) => ({
+            questionId: dbQuestion.id,
+            description: alternative.description,
+            isTrue: alternative.isTrue,
+          }));
+
+          await trx.insert(alternativeTable).values(altRows);
+        }
+      });
+    } catch (error) {
+      throw new TransactionError((error as Error).message);
     }
 
-    return { id: exam.id };
+    return exam;
   }
 
   /* READ → all exams for a section */
@@ -49,16 +58,13 @@ export class ExamService {
       .from(examTable)
       .where(
         and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
-      )
-      .limit(1);
-
-    if (!exam) throw new NotFoundException('Exam not found');
+      );
 
     const rows = await db
       .select({
-        qId: questionTable.id,
+        questionId: questionTable.id,
         question: questionTable.text,
-        aId: alternativeTable.id,
+        alternativeId: alternativeTable.id,
         description: alternativeTable.description,
         isTrue: alternativeTable.isTrue,
       })
@@ -70,25 +76,36 @@ export class ExamService {
       .where(eq(questionTable.examId, examId));
 
     // agrega alternativas por questão
-    const map = new Map<number, any>();
-    for (const r of rows) {
-      if (!map.has(r.qId)) {
-        map.set(r.qId, {
-          questionId: r.qId,
-          question: r.question,
-          alternatives: [],
-        });
+    const map: Record<
+      number,
+      {
+        questionId: number;
+        question: string;
+        alternatives: Array<{
+          id: number | null;
+          description: string | null;
+          isTrue: boolean | null;
+        }>;
       }
-      if (r.aId) {
-        map.get(r.qId).alternatives.push({
-          id: r.aId,
-          description: r.description,
-          isTrue: r.isTrue,
+    > = {};
+    for (const row of rows) {
+      if (!map[row.questionId]) {
+        map[row.questionId] = {
+          questionId: row.questionId,
+          question: row.question,
+          alternatives: [],
+        };
+      }
+      if (row['alternativeId']) {
+        map[row.questionId].alternatives.push({
+          id: row.alternativeId,
+          description: row.description,
+          isTrue: row.isTrue,
         });
       }
     }
 
-    return { ...exam, questions: [...map.values()] };
+    return { ...exam, questions: [...Object.values(map)] };
   }
 
   /* UPDATE → só examName por enquanto */
@@ -109,6 +126,5 @@ export class ExamService {
       .where(
         and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
       );
-    return { deleted: true };
   }
 }
