@@ -6,6 +6,7 @@ import courseSection from './course-section';
 import courseTag from './course-tag';
 import exam from './exam';
 import lesson from './lesson';
+import material from './material';
 import ordination from './ordination';
 import progression from './progression';
 import question from './question';
@@ -23,12 +24,12 @@ export {
   courseTag,
   exam,
   lesson,
+  material,
   ordination,
   progression,
   question,
   questionOption,
   studentAnswer,
   subscription,
-  user
+  user,
 };
-
