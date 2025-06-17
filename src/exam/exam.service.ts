@@ -6,12 +6,12 @@ import {
   exam as examTable,
   question as questionTable,
 } from '../db/schema';
-import { CreateExamDto, UpdateExamDto } from './dto';
+import { CreateExamDTO, UpdateExamDTO } from './exam.dto';
 
 @Injectable()
 export class ExamService {
   /* CREATE */
-  async create(sectionId: number, dto: CreateExamDto) {
+  async create(sectionId: number, dto: CreateExamDTO) {
     const [exam] = await db
       .insert(examTable)
       .values({ courseSection: sectionId, name: dto.examName })
@@ -92,7 +92,7 @@ export class ExamService {
   }
 
   /* UPDATE → só examName por enquanto */
-  async update(sectionId: number, examId: number, dto: UpdateExamDto) {
+  async update(sectionId: number, examId: number, dto: UpdateExamDTO) {
     await db
       .update(examTable)
       .set({ name: dto.examName })
