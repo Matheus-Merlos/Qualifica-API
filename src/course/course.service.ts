@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { course, courseTag } from 'src/db/schema';
 import { CreateCourseDTO } from './course.dto';
@@ -6,8 +7,9 @@ import { CreateCourseDTO } from './course.dto';
 @Injectable()
 export class CourseService {
   async createCourse(userId: number, dto: CreateCourseDTO) {
+    let createdCourse: InferSelectModel<typeof course> | null = null;
     await db.transaction(async (trx) => {
-      const [createdCourse] = await trx
+      [createdCourse] = await trx
         .insert(course)
         .values({
           description: dto.description,
@@ -27,5 +29,7 @@ export class CourseService {
 
       await Promise.all(promises);
     });
+
+    return createdCourse;
   }
 }
