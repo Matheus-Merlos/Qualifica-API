@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   InternalServerErrorException,
   Param,
   ParseIntPipe,
@@ -38,6 +39,20 @@ export class CourseController {
   ) {
     try {
       return await this.courseService.edit(userId, courseId, body);
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(
+        `Internal Server Error: ${(error as Error).message}`,
+      );
+    }
+  }
+
+  @Delete(':userId/:courseId')
+  async deleteCourse(
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
+  ) {
+    try {
+      return await this.courseService.destroy(courseId);
     } catch (error: unknown) {
       throw new InternalServerErrorException(
         `Internal Server Error: ${(error as Error).message}`,

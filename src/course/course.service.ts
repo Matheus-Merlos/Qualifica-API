@@ -65,4 +65,8 @@ export class CourseService {
 
     return await db.select().from(course).where(eq(course.id, courseId));
   }
+
+  async destroy(courseId: number) {
+    await db.delete(course).where(eq(course.id, courseId));
+  }
 }
