@@ -12,7 +12,7 @@ import { CourseService } from './course.service';
 
 @Controller('course')
 export class CourseController {
-  private readonly courseService: CourseService;
+  constructor(private readonly courseService: CourseService) {}
 
   @Post(':userId')
   async createCourse(
