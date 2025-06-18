@@ -30,6 +30,19 @@ export class CourseController {
     }
   }
 
+  @Get(':courseId')
+  async retrieveCourse(
+    @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
+  ) {
+    try {
+      return await this.courseService.retrieve(courseId);
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(
+        `Internal Server Error: ${(error as Error).message}`,
+      );
+    }
+  }
+
   @Post(':userId')
   async createCourse(
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,

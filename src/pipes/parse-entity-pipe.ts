@@ -13,9 +13,7 @@ export abstract class BaseParseEntityPipe implements PipeTransform {
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (typeof value !== 'number') {
-      throw new BadRequestException(
-        `${metadata.metatype?.name} must be a number!`,
-      );
+      throw new BadRequestException(`${metadata.data} must be a number!`);
     }
 
     const [entity] = await db
