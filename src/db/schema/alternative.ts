@@ -6,7 +6,7 @@ import {
   serial,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { default as questionTable } from './question';
+import questionTable from './question';
 
 const alternativeTable = pgTable('alternative', {
   id: serial('id').primaryKey(),
