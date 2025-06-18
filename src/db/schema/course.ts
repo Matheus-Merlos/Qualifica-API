@@ -3,7 +3,7 @@ import user from './user';
 
 export default pgTable('course', {
   id: serial().primaryKey(),
-  description: text().notNull(),
+  description: text(),
   owner: integer()
     .notNull()
     .references(() => user.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
