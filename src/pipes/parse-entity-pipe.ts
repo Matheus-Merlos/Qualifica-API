@@ -9,7 +9,7 @@ import { PgTable } from 'drizzle-orm/pg-core';
 import db from 'src/db';
 
 export abstract class BaseParseEntityPipe implements PipeTransform {
-  protected abstract table: PgTable & { id: Column<any> };
+  protected table: PgTable & { id: Column<any> };
 
   async transform(value: any, metadata: ArgumentMetadata) {
     if (typeof value !== 'number') {
@@ -20,7 +20,7 @@ export abstract class BaseParseEntityPipe implements PipeTransform {
 
     const [entity] = await db
       .select()
-      .from(this.table as PgTable)
+      .from(this.table)
       .where(eq(this.table.id, value));
 
     if (!entity) {
