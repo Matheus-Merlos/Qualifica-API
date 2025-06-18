@@ -12,6 +12,7 @@ export class CourseService {
       [createdCourse] = await trx
         .insert(course)
         .values({
+          name: dto.name,
           description: dto.description,
           owner: userId,
         })
@@ -40,6 +41,7 @@ export class CourseService {
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tags, ...patchCourseObj } = dto;
+      console.log(patchCourseObj);
       await db
         .update(course)
         .set(patchCourseObj)

@@ -22,7 +22,7 @@ export class CourseController {
     @Body() body: CreateCourseDTO,
   ) {
     try {
-      await this.courseService.create(userId, body);
+      return await this.courseService.create(userId, body);
     } catch (error: unknown) {
       throw new InternalServerErrorException(
         `Internal Server Error: ${(error as Error).message}`,
@@ -37,7 +37,7 @@ export class CourseController {
     @Body() body: PatchCourseDTO,
   ) {
     try {
-      await this.courseService.edit(userId, courseId, body);
+      return await this.courseService.edit(userId, courseId, body);
     } catch (error: unknown) {
       throw new InternalServerErrorException(
         `Internal Server Error: ${(error as Error).message}`,
