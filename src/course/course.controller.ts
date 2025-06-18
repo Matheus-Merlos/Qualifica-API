@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ParseCoursePipe } from 'src/pipes/parse-course.pipe';
 import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
@@ -16,6 +18,17 @@ import { CourseService } from './course.service';
 @Controller('course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
+
+  @Get()
+  async searchCourses(@Query('q') query: string) {
+    try {
+      return await this.courseService.search(query);
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(
+        `Internal Server Error: ${(error as Error).message}`,
+      );
+    }
+  }
 
   @Post(':userId')
   async createCourse(

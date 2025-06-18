@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { eq, InferSelectModel } from 'drizzle-orm';
+import { asc, eq, ilike, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { course, courseTag } from 'src/db/schema';
 import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 
 @Injectable()
 export class CourseService {
+  async search(searchParam: string = '') {
+    return await db
+      .select({
+        id: course.id,
+        name: course.name,
+        description: course.description,
+      })
+      .from(course)
+      .where(ilike(course.name, `%${searchParam.replaceAll('-', ' ')}%`))
+      .orderBy(asc(course.name))
+      .limit(25);
+  }
+
   async create(userId: number, dto: CreateCourseDTO) {
     let createdCourse: InferSelectModel<typeof course> | null = null;
     await db.transaction(async (trx) => {
