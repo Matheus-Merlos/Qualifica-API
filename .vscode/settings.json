@@ -3,7 +3,8 @@
     "source.addMissingImports.ts": "always",
     "source.fixAll.eslint": "always",
     "source.fixAll.ts": "always",
-    "source.sortImports": "always"
+    "source.sortImports": "always",
+    "source.removeUnusedImports": "always"
   },
   "editor.tabSize": 2,
   "explorer.compactFolders": false
