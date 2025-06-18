@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InferSelectModel } from 'drizzle-orm';
+import { eq, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { course, courseTag } from 'src/db/schema';
-import { CreateCourseDTO } from './course.dto';
+import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 
 @Injectable()
 export class CourseService {
-  async createCourse(userId: number, dto: CreateCourseDTO) {
+  async create(userId: number, dto: CreateCourseDTO) {
     let createdCourse: InferSelectModel<typeof course> | null = null;
     await db.transaction(async (trx) => {
       [createdCourse] = await trx
@@ -31,5 +31,36 @@ export class CourseService {
     });
 
     return createdCourse;
+  }
+
+  async edit(userId: number, courseId: number, dto: PatchCourseDTO) {
+    if (
+      Object.keys(dto).includes('name') ||
+      Object.keys(dto).includes('description')
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { tags, ...patchCourseObj } = dto;
+      await db
+        .update(course)
+        .set(patchCourseObj)
+        .where(eq(course.id, courseId));
+    }
+
+    if (Object.keys(dto).includes('tags')) {
+      await db.transaction(async (trx) => {
+        await trx.delete(courseTag).where(eq(courseTag.course, courseId));
+
+        const promises: Array<Promise<unknown>> = [];
+        // Usando "!" porque a validação já é feita acima
+        for (const tag of dto.tags!) {
+          promises.push(
+            trx.insert(courseTag).values({ course: courseId, tag }),
+          );
+        }
+        await Promise.all(promises);
+      });
+    }
+
+    return await db.select().from(course).where(eq(course.id, courseId));
   }
 }

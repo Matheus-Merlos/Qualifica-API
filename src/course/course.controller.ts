@@ -4,10 +4,12 @@ import {
   InternalServerErrorException,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
+import { ParseCoursePipe } from 'src/pipes/parse-course.pipe';
 import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
-import { CreateCourseDTO } from './course.dto';
+import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 import { CourseService } from './course.service';
 
 @Controller('course')
@@ -20,7 +22,22 @@ export class CourseController {
     @Body() body: CreateCourseDTO,
   ) {
     try {
-      await this.courseService.createCourse(userId, body);
+      await this.courseService.create(userId, body);
+    } catch (error: unknown) {
+      throw new InternalServerErrorException(
+        `Internal Server Error: ${(error as Error).message}`,
+      );
+    }
+  }
+
+  @Patch(':userId/:courseId')
+  async editCourse(
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
+    @Body() body: PatchCourseDTO,
+  ) {
+    try {
+      await this.courseService.edit(userId, courseId, body);
     } catch (error: unknown) {
       throw new InternalServerErrorException(
         `Internal Server Error: ${(error as Error).message}`,
