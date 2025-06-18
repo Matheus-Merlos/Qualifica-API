@@ -1,41 +1,33 @@
-import { bigserial, integer, pgTable, unique } from 'drizzle-orm/pg-core';
-import { default as courseAdditionalTable } from './course-additional';
-import { default as courseSectionTable } from './course-section';
-import { default as examTable } from './exam';
-import { default as lessonTable } from './lesson';
+import { integer, pgTable, serial, unique } from 'drizzle-orm/pg-core';
+import courseAdditionalTable from './course-additional';
+import courseSectionTable from './course-section';
+import examTable from './exam';
+import lessonTable from './lesson';
 
 export default pgTable(
   'ordination',
   {
-    id: bigserial({ mode: 'number' }).primaryKey(),
+    id: serial().primaryKey(),
 
-    courseSection: integer()
-      .notNull()
-      .references(() => courseSectionTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    courseSection: integer().references(() => courseSectionTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 
-    lesson: integer()
-      .notNull()
-      .references(() => lessonTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    lesson: integer().references(() => lessonTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 
-    courseAdditional: integer()
-      .notNull()
-      .references(() => courseAdditionalTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    courseAdditional: integer().references(() => courseAdditionalTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 
-    exam: integer()
-      .notNull()
-      .references(() => examTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    exam: integer().references(() => examTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 
     order: integer().notNull(),
   },

@@ -1,5 +1,5 @@
 import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { default as examTable } from './exam';
+import examTable from './exam';
 
 export const questionTable = pgTable('question', {
   id: serial('id').primaryKey(),
