@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   ArrayNotEmpty,
   ArrayUnique,
@@ -25,4 +26,6 @@ class CreateCourseDTO {
   tags: Array<string>;
 }
 
-export { CreateCourseDTO };
+class PatchCourseDTO extends PartialType(CreateCourseDTO) {}
+
+export { CreateCourseDTO, PatchCourseDTO };
