@@ -9,51 +9,41 @@ import {
   Post,
 } from '@nestjs/common';
 import { ParseExamPipe } from 'src/pipes/parse-exam.pipe';
-import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
+import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
 import { CreateExamDTO, UpdateExamDTO } from './exam.dto';
 import { ExamService } from './exam.service';
 
-@Controller('exam/:sectionId')
+@Controller('exam')
 export class ExamController {
   constructor(private readonly examService: ExamService) {}
 
-  @Post()
+  @Get(':examId')
+  findOne(@Param('examId', ParseIntPipe, ParseExamPipe) examId: number) {
+    return this.examService.retrieve(examId);
+  }
+
+  @Post(':userId')
   create(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() createExamDto: CreateExamDTO,
   ) {
-    return this.examService.create(sectionId, createExamDto);
+    return this.examService.create(userId, createExamDto);
   }
 
-  @Get()
-  findAll(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
-  ) {
-    return this.examService.findAllBySection(sectionId);
-  }
-
-  @Get(':examId')
-  findOne(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
-    @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
-  ) {
-    return this.examService.findOne(sectionId, examId);
-  }
-
-  @Patch(':examId')
+  @Patch(':userId/:examId')
   update(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
-    @Param('examId') examId: string,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
     @Body() updateExamDto: UpdateExamDTO,
   ) {
-    return this.examService.update(sectionId, +examId, updateExamDto);
+    return this.examService.update(userId, examId, updateExamDto);
   }
 
-  @Delete(':examId')
+  @Delete(':userId/:examId')
   remove(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
   ) {
-    return this.examService.remove(sectionId, examId);
+    return this.examService.destroy(userId, examId);
   }
 }

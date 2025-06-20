@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { and, eq, InferSelectModel } from 'drizzle-orm';
+import { eq, InferSelectModel } from 'drizzle-orm';
 import { TransactionError } from 'src/app.exceptions';
 import db from 'src/db';
 import {
   alternative as alternativeTable,
   exam as examTable,
   question as questionTable,
+  user,
 } from '../db/schema';
 import { CreateExamDTO, UpdateExamDTO } from './exam.dto';
 
 @Injectable()
 export class ExamService {
-  /* CREATE */
-  async create(sectionId: number, dto: CreateExamDTO) {
+  async create(userId: number, dto: CreateExamDTO) {
     let exam: InferSelectModel<typeof examTable> | null = null;
     try {
       await db.transaction(async (trx) => {
         [exam] = await trx
           .insert(examTable)
-          .values({ courseSection: sectionId, name: dto.examName })
+          .values({ name: dto.name, owner: userId })
           .returning();
 
         for (const question of dto.questions) {
@@ -43,22 +43,17 @@ export class ExamService {
     return exam;
   }
 
-  /* READ → all exams for a section */
-  findAllBySection(sectionId: number) {
-    return db
-      .select()
-      .from(examTable)
-      .where(eq(examTable.courseSection, sectionId));
-  }
-
   /* READ → one exam with questions + alternatives */
-  async findOne(sectionId: number, examId: number) {
+  async retrieve(examId: number) {
     const [exam] = await db
-      .select()
+      .select({
+        id: examTable.id,
+        name: examTable.name,
+        owner: user.name,
+      })
       .from(examTable)
-      .where(
-        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
-      );
+      .where(eq(examTable.id, examId))
+      .innerJoin(user, eq(examTable.owner, user.id));
 
     const rows = await db
       .select({
@@ -84,10 +79,10 @@ export class ExamService {
         alternatives: Array<{
           id: number | null;
           description: string | null;
-          isTrue: boolean | null;
         }>;
       }
     > = {};
+
     for (const row of rows) {
       if (!map[row.questionId]) {
         map[row.questionId] = {
@@ -100,7 +95,6 @@ export class ExamService {
         map[row.questionId].alternatives.push({
           id: row.alternativeId,
           description: row.description,
-          isTrue: row.isTrue,
         });
       }
     }
@@ -108,23 +102,42 @@ export class ExamService {
     return { ...exam, questions: [...Object.values(map)] };
   }
 
-  /* UPDATE → só examName por enquanto */
-  async update(sectionId: number, examId: number, dto: UpdateExamDTO) {
-    await db
-      .update(examTable)
-      .set({ name: dto.examName })
-      .where(
-        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
-      );
-    return this.findOne(sectionId, examId);
+  async update(userId: number, examId: number, dto: UpdateExamDTO) {
+    //Update de name
+    if (Object.keys(dto).includes('name')) {
+      await db
+        .update(examTable)
+        .set({ name: dto.name })
+        .where(eq(examTable.id, examId));
+    }
+
+    //Update das questões
+    if (Object.keys(dto).includes('questions')) {
+      await db.transaction(async (trx) => {
+        await trx.delete(questionTable).where(eq(questionTable.examId, examId));
+
+        //Recria tudo
+        for (const question of dto.questions!) {
+          const [dbQuestion] = await trx
+            .insert(questionTable)
+            .values({ examId, text: question.question })
+            .returning();
+
+          const altRows = question.alternatives.map((alternative) => ({
+            questionId: dbQuestion.id,
+            description: alternative.description,
+            isTrue: alternative.isTrue,
+          }));
+
+          await trx.insert(alternativeTable).values(altRows);
+        }
+      });
+    }
+
+    return await db.select().from(examTable).where(eq(examTable.id, examId));
   }
 
-  /* DELETE */
-  async remove(sectionId: number, examId: number) {
-    await db
-      .delete(examTable)
-      .where(
-        and(eq(examTable.id, examId), eq(examTable.courseSection, sectionId)),
-      );
+  async destroy(userId: number, examId: number) {
+    await db.delete(examTable).where(eq(examTable.id, examId));
   }
 }
