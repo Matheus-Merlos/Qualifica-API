@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -45,3 +46,5 @@ export class CreateSectionDTO {
   @IsPositive()
   order: number;
 }
+
+export class PatchSectionDTO extends PartialType(CreateSectionDTO) {}
