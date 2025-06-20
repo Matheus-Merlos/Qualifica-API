@@ -1,5 +1,13 @@
-import { Body, Controller, Param, ParseIntPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { ParseCoursePipe } from 'src/pipes/parse-course.pipe';
+import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
 import { CreateSectionDTO } from './section.dto';
 import { SectionService } from './section.service';
 
@@ -13,5 +21,12 @@ export class SectionController {
     @Body() createSectionDTO: CreateSectionDTO,
   ) {
     return await this.sectionService.create(courseId, createSectionDTO);
+  }
+
+  @Delete(':sectionId')
+  async deleteSection(
+    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
+  ) {
+    return await this.sectionService.destroy(sectionId);
   }
 }

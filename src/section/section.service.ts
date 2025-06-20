@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InferSelectModel } from 'drizzle-orm';
+import { eq, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import {
   courseSection,
@@ -85,5 +85,9 @@ export class SectionService {
     });
 
     return createdSection;
+  }
+
+  async destroy(sectionId: number) {
+    await db.delete(courseSection).where(eq(courseSection.id, sectionId));
   }
 }
