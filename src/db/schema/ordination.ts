@@ -1,30 +1,32 @@
 import { integer, pgTable, serial, unique } from 'drizzle-orm/pg-core';
-import courseAdditionalTable from './course-additional';
 import courseSectionTable from './course-section';
-import examTable from './exam';
-import lessonTable from './lesson';
+import sectionExam from './section-exam';
+import sectionLesson from './section-lesson';
+import sectionMaterial from './section-material';
 
 export default pgTable(
   'ordination',
   {
     id: serial().primaryKey(),
 
-    courseSection: integer().references(() => courseSectionTable.id, {
+    courseSection: integer()
+      .notNull()
+      .references(() => courseSectionTable.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      }),
+
+    sectionLesson: integer().references(() => sectionLesson.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
 
-    lesson: integer().references(() => lessonTable.id, {
+    sectionMaterial: integer().references(() => sectionMaterial.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
 
-    courseAdditional: integer().references(() => courseAdditionalTable.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-
-    exam: integer().references(() => examTable.id, {
+    sectionExam: integer().references(() => sectionExam.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
