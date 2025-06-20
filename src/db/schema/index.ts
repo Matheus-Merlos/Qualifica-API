@@ -9,7 +9,6 @@ import material from './material';
 import ordination from './ordination';
 import progression from './progression';
 import question from './question';
-import questionOption from './question-option';
 import sectionExam from './section-exam';
 import sectionLesson from './section-lesson';
 import sectionMaterial from './section-material';
@@ -29,7 +28,6 @@ export {
   ordination,
   progression,
   question,
-  questionOption,
   sectionExam,
   sectionLesson,
   sectionMaterial,
