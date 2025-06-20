@@ -1,15 +1,15 @@
 import { bigserial, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
-import courseSection from './course-section';
+import user from './user';
 
 export default pgTable('material', {
   id: bigserial({ mode: 'number' }).primaryKey(),
-  courseSection: integer()
-    .notNull()
-    .references(() => courseSection.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
   url: varchar({ length: 511 }),
   name: varchar({ length: 255 }),
   description: varchar({ length: 511 }),
+  owner: integer()
+    .notNull()
+    .references(() => user.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 });
