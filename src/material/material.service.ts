@@ -49,9 +49,8 @@ export class MaterialService {
     let material: InferSelectModel<typeof materialModel>;
     try {
       const dataToUpdate = {
-        ...updateMaterialDto, // Espalha as propriedades do DTO (name, url, description, etc.)
+        ...updateMaterialDto,
         courseSection: sectionId,
-        //updatedAt: new Date(), // <-- CORREÇÃO: Use 'updatedAt' e atribua diretamente
       };
       [material] = await db
         .update(materialModel)
