@@ -11,4 +11,5 @@ export default pgTable('material', {
     }),
   url: varchar({ length: 511 }),
   name: varchar({ length: 255 }),
+  description: varchar({ length: 511 }),
 });
