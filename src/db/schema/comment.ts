@@ -6,14 +6,14 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
-import lesson from './lesson';
+import sectionLesson from './section-lesson';
 import user from './user';
 
 const comment = pgTable('comment', {
   id: bigserial({ mode: 'number' }).primaryKey(),
-  lesson: integer()
+  sectionLesson: integer()
     .notNull()
-    .references(() => lesson.id, {
+    .references(() => sectionLesson.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),

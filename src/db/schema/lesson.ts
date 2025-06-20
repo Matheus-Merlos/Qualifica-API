@@ -6,18 +6,18 @@ import {
   time,
   varchar,
 } from 'drizzle-orm/pg-core';
-import courseSection from './course-section';
+import user from './user';
 
 export default pgTable('lesson', {
   id: bigserial({ mode: 'number' }).primaryKey(),
-  courseSection: integer()
-    .notNull()
-    .references(() => courseSection.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
   url: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
   duration: time().notNull(),
   description: text(),
+  owner: integer()
+    .notNull()
+    .references(() => user.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 });

@@ -1,6 +1,6 @@
 import { bigserial, boolean, integer, pgTable } from 'drizzle-orm/pg-core';
+import sectionLesson from './section-lesson';
 import user from './user';
-import lesson from './lesson';
 
 export default pgTable('progression', {
   id: bigserial({ mode: 'number' }).primaryKey(),
@@ -10,9 +10,9 @@ export default pgTable('progression', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  lesson: integer()
+  sectionLesson: integer()
     .notNull()
-    .references(() => lesson.id, {
+    .references(() => sectionLesson.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
