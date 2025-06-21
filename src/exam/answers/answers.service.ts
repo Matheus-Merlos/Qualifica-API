@@ -1,11 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
 import db from 'src/db';
-import { studentAnswer } from 'src/db/schema';
+import {
+  alternative,
+  exam as examTable,
+  question,
+  sectionExam,
+  studentAnswer,
+} from 'src/db/schema';
 import { AnswerDTO } from './answers.dto';
 
 @Injectable()
 export class AnswersService {
+  async result(exam: number, userId: number) {
+    const questionsWithAnswers = await db
+      .select({
+        questionId: question.id,
+        question: question.text,
+        answer: alternative.description,
+        alternativeId: alternative.id,
+        answeredCorrectly: alternative.isTrue,
+      })
+      .from(studentAnswer)
+      .innerJoin(question, eq(studentAnswer.question, question.id))
+      .innerJoin(alternative, eq(studentAnswer.alternative, alternative.id))
+      .where(and(eq(studentAnswer.user, userId), eq(studentAnswer.exam, exam)));
+
+    const weightByQuestion = 10 / questionsWithAnswers.length;
+    let correctAnswers = 0;
+    questionsWithAnswers.forEach((question) => {
+      if (question.answeredCorrectly) {
+        correctAnswers++;
+      }
+    });
+    const finalScore = correctAnswers * weightByQuestion;
+
+    const [dbExam] = await db
+      .select({ name: examTable.name })
+      .from(sectionExam)
+      .innerJoin(examTable, eq(sectionExam.exam, examTable.id))
+      .where(eq(sectionExam.exam, exam));
+
+    const examResult = {
+      name: dbExam.name,
+      finalScore: finalScore.toFixed(2),
+      questionsWithAnswers,
+    };
+
+    return examResult;
+  }
+
   async create(exam: number, user: number, question: number, dto: AnswerDTO) {
     return await db
       .insert(studentAnswer)

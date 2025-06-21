@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   NotFoundException,
   Param,
   ParseIntPipe,
@@ -18,6 +19,14 @@ import { AnswersService } from './answers.service';
 @Controller('exam/:examId/answers/:userId')
 export class AnswersController {
   constructor(private readonly answersService: AnswersService) {}
+
+  @Get()
+  async getExamResult(
+    @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+  ) {
+    return await this.answersService.result(examId, userId);
+  }
 
   @Post(':questionId')
   async registerAnswer(
