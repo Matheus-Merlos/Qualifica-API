@@ -19,18 +19,26 @@ export class AnswersService {
   }
 
   async edit(exam: number, user: number, question: number, dto: AnswerDTO) {
-    return await db
-      .update(studentAnswer)
-      .set({
-        alternative: dto.alternative,
-      })
+    const [answer] = await db
+      .select()
+      .from(studentAnswer)
       .where(
         and(
           eq(studentAnswer.user, user),
           eq(studentAnswer.question, question),
           eq(studentAnswer.exam, exam),
         ),
-      )
+      );
+    if (!answer) {
+      throw new Error('This question has not been answered before');
+    }
+
+    return await db
+      .update(studentAnswer)
+      .set({
+        alternative: dto.alternative,
+      })
+      .where(eq(studentAnswer.id, answer.id))
       .returning();
   }
 

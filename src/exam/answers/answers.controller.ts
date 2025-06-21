@@ -50,12 +50,20 @@ export class AnswersController {
     questionId: number,
     @Body() answerDto: AnswerDTO,
   ) {
-    return await this.answersService.edit(
-      examId,
-      userId,
-      questionId,
-      answerDto,
-    );
+    try {
+      return await this.answersService.edit(
+        examId,
+        userId,
+        questionId,
+        answerDto,
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('answered')) {
+          throw new BadRequestException(error.message);
+        }
+      }
+    }
   }
 
   @Delete(':questionId')
