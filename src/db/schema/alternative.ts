@@ -11,7 +11,10 @@ import questionTable from './question';
 const alternativeTable = pgTable('alternative', {
   id: serial('id').primaryKey(),
   questionId: integer('question_id')
-    .references(() => questionTable.id)
+    .references(() => questionTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
     .notNull(),
   description: varchar('description', { length: 255 }).notNull(),
   isTrue: boolean('is_true').notNull(),
