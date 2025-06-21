@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   Param,
   ParseIntPipe,
   Patch,
@@ -21,26 +20,14 @@ export class CourseController {
 
   @Get()
   async searchCourses(@Query('q') query: string) {
-    try {
-      return await this.courseService.search(query);
-    } catch (error: unknown) {
-      throw new InternalServerErrorException(
-        `Internal Server Error: ${(error as Error).message}`,
-      );
-    }
+    return await this.courseService.search(query);
   }
 
   @Get(':courseId')
   async retrieveCourse(
     @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
   ) {
-    try {
-      return await this.courseService.retrieve(courseId);
-    } catch (error: unknown) {
-      throw new InternalServerErrorException(
-        `Internal Server Error: ${(error as Error).message}`,
-      );
-    }
+    return await this.courseService.retrieve(courseId);
   }
 
   @Post(':userId')
@@ -48,13 +35,7 @@ export class CourseController {
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() body: CreateCourseDTO,
   ) {
-    try {
-      return await this.courseService.create(userId, body);
-    } catch (error: unknown) {
-      throw new InternalServerErrorException(
-        `Internal Server Error: ${(error as Error).message}`,
-      );
-    }
+    return await this.courseService.create(userId, body);
   }
 
   @Patch(':userId/:courseId')
@@ -63,13 +44,7 @@ export class CourseController {
     @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
     @Body() body: PatchCourseDTO,
   ) {
-    try {
-      return await this.courseService.edit(userId, courseId, body);
-    } catch (error: unknown) {
-      throw new InternalServerErrorException(
-        `Internal Server Error: ${(error as Error).message}`,
-      );
-    }
+    return await this.courseService.edit(userId, courseId, body);
   }
 
   @Delete(':userId/:courseId')
@@ -77,12 +52,6 @@ export class CourseController {
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
   ) {
-    try {
-      return await this.courseService.destroy(courseId);
-    } catch (error: unknown) {
-      throw new InternalServerErrorException(
-        `Internal Server Error: ${(error as Error).message}`,
-      );
-    }
+    return await this.courseService.destroy(courseId);
   }
 }
