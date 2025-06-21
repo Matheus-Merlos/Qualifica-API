@@ -57,7 +57,7 @@ export class AnswersService {
       throw new Error('Answer not found.');
     }
 
-    return await db
+    await db
       .delete(studentAnswer)
       .where(
         and(
@@ -65,7 +65,6 @@ export class AnswersService {
           eq(studentAnswer.question, question),
           eq(studentAnswer.exam, exam),
         ),
-      )
-      .returning();
+      );
   }
 }
