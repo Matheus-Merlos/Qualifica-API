@@ -5,7 +5,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   NotFoundException,
   Post,
 } from '@nestjs/common';
@@ -28,10 +27,6 @@ export class AuthController {
     } catch (error) {
       if (error instanceof UserExistsException)
         throw new ConflictException('User with this e-mail already exists.');
-      console.log(error);
-      throw new InternalServerErrorException(
-        `Internal server error: ${(error as Error).message}.`,
-      );
     }
   }
 
@@ -45,10 +40,6 @@ export class AuthController {
         throw new NotFoundException('User not found.');
       if (error instanceof WrongPasswordException)
         throw new BadRequestException('Wrong password.');
-      console.log(error);
-      throw new InternalServerErrorException(
-        `Internal server error: ${(error as Error).message}`,
-      );
     }
   }
 }

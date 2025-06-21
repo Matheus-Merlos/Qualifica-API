@@ -2,7 +2,7 @@ import { integer, pgTable, serial } from 'drizzle-orm/pg-core';
 import courseSection from './course-section';
 import lesson from './lesson';
 
-export default pgTable('section_exam', {
+export default pgTable('section_lesson', {
   id: serial().primaryKey(),
   lesson: integer()
     .notNull()
