@@ -9,7 +9,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ParseMaterialPipe } from 'src/pipes/parse-material.pipe';
-import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
 import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { MaterialService } from './material.service';
 import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
