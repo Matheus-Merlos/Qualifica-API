@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -25,12 +26,20 @@ export class AnswersController {
     questionId: number,
     @Body() answerDto: AnswerDTO,
   ) {
-    return await this.answersService.create(
-      examId,
-      userId,
-      questionId,
-      answerDto,
-    );
+    try {
+      return await this.answersService.create(
+        examId,
+        userId,
+        questionId,
+        answerDto,
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('Failed query')) {
+        throw new BadRequestException(
+          'You already answered this question in this exam.',
+        );
+      }
+    }
   }
 
   @Patch(':questionId')
