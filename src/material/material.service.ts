@@ -2,18 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { eq, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { material as materialModel } from 'src/db/schema';
-import { CreateMaterialDto } from './dto/create-material.dto';
-import { UpdateMaterialDto } from './dto/update-material.dto';
+import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 
 @Injectable()
 export class MaterialService {
-  async create(courseSection: number, createMaterialDto: CreateMaterialDto) {
+  async create(owner: number, createMaterialDto: CreateMaterialDto) {
     let material: InferSelectModel<typeof materialModel>;
     try {
       [material] = await db
         .insert(materialModel)
         .values({
-          courseSection,
+          owner: owner,
           url: createMaterialDto.url,
           name: createMaterialDto.name,
           description: createMaterialDto.description,
@@ -26,11 +25,11 @@ export class MaterialService {
     return material!;
   }
 
-  findAllBySection(sectionId: number) {
+  findAllByOwner(owner: number) {
     return db
       .select()
       .from(materialModel)
-      .where(eq(materialModel.courseSection, sectionId));
+      .where(eq(materialModel.owner, owner));
   }
 
   findOne(id: number) {
@@ -43,14 +42,14 @@ export class MaterialService {
 
   async update(
     id: number,
-    sectionId: number,
+    owner: number,
     updateMaterialDto: UpdateMaterialDto,
   ) {
     let material: InferSelectModel<typeof materialModel>;
     try {
       const dataToUpdate = {
         ...updateMaterialDto,
-        courseSection: sectionId,
+        owner: owner,
       };
       [material] = await db
         .update(materialModel)

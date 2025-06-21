@@ -10,27 +10,25 @@ import {
 } from '@nestjs/common';
 import { ParseMaterialPipe } from 'src/pipes/parse-material.pipe';
 import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
-import { CreateMaterialDto } from './dto/create-material.dto';
-import { UpdateMaterialDto } from './dto/update-material.dto';
+import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { MaterialService } from './material.service';
+import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
 
-@Controller(':material/:sectionId')
+@Controller(':material/')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
 
-  @Post()
+  @Post('userId/')
   create(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() createMaterialDto: CreateMaterialDto,
   ) {
-    return this.materialService.create(sectionId, createMaterialDto);
+    return this.materialService.create(userId, createMaterialDto);
   }
 
-  @Get()
-  findAll(
-    @Param('sectionId', ParseIntPipe, ParseSectionPipe) sectionId: number,
-  ) {
-    return this.materialService.findAllBySection(sectionId);
+  @Get('userId/')
+  findAll(@Param('userId', ParseIntPipe, ParseUserPipe) userId: number) {
+    return this.materialService.findAllByOwner(userId);
   }
 
   @Get(':id')
@@ -41,10 +39,10 @@ export class MaterialController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe, ParseMaterialPipe) id: number,
-    @Param('sectionID', ParseIntPipe, ParseSectionPipe) sectionId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() updateMaterialDto: UpdateMaterialDto,
   ) {
-    return this.materialService.update(id, sectionId, updateMaterialDto);
+    return this.materialService.update(id, userId, updateMaterialDto);
   }
 
   @Delete(':id')

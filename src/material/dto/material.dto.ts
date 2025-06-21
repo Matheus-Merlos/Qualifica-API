@@ -1,9 +1,7 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 
 export class CreateMaterialDto {
-  @IsString()
-  courseSection: string;
-
   @IsString()
   @MaxLength(255)
   @MinLength(4)
@@ -19,3 +17,5 @@ export class CreateMaterialDto {
   @MaxLength(511)
   description: string;
 }
+
+export class UpdateMaterialDto extends PartialType(CreateMaterialDto) {}
