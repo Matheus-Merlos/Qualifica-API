@@ -31,8 +31,8 @@ export default pgTable(
   },
   (table) => [
     uniqueIndex('unique_question_answer_idx').on(
+      table.exam,
       table.question,
-      table.alternative,
       table.user,
     ),
   ],
