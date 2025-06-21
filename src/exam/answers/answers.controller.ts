@@ -44,10 +44,15 @@ export class AnswersController {
         answerDto,
       );
     } catch (error) {
-      if (error instanceof Error && error.message.includes('Failed query')) {
-        throw new BadRequestException(
-          'You already answered this question in this exam.',
-        );
+      if (error instanceof Error) {
+        if (error.message.includes('Failed query')) {
+          throw new BadRequestException(
+            'You already answered this question in this exam.',
+          );
+        }
+        if (error.message.includes('alternative')) {
+          throw new BadRequestException(error.message);
+        }
       }
     }
   }

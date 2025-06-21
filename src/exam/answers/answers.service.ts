@@ -51,6 +51,14 @@ export class AnswersService {
   }
 
   async create(exam: number, user: number, question: number, dto: AnswerDTO) {
+    const [alt] = await db
+      .select()
+      .from(alternative)
+      .where(eq(alternative.id, dto.alternative));
+
+    if (alt.questionId !== question) {
+      throw new Error('This alternative does not belong to this question.');
+    }
     return await db
       .insert(studentAnswer)
       .values({
