@@ -43,6 +43,20 @@ export class AnswersService {
   }
 
   async destroy(exam: number, user: number, question: number) {
+    const [answer] = await db
+      .select()
+      .from(studentAnswer)
+      .where(
+        and(
+          eq(studentAnswer.user, user),
+          eq(studentAnswer.question, question),
+          eq(studentAnswer.exam, exam),
+        ),
+      );
+    if (!answer) {
+      throw new Error('Answer not found.');
+    }
+
     return await db
       .delete(studentAnswer)
       .where(

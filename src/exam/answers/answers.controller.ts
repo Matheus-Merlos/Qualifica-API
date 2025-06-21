@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -73,6 +74,14 @@ export class AnswersController {
     @Param('questionId', ParseIntPipe, ParseQuestionPipe)
     questionId: number,
   ) {
-    return await this.answersService.destroy(examId, userId, questionId);
+    try {
+      return await this.answersService.destroy(examId, userId, questionId);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('not found')) {
+          throw new NotFoundException('Answer not found');
+        }
+      }
+    }
   }
 }
