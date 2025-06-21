@@ -14,7 +14,7 @@ import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { MaterialService } from './material.service';
 import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
 
-@Controller(':material/')
+@Controller('material/')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
 
