@@ -8,11 +8,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ParseMaterialPipe } from 'src/pipes/parse-material.pipe';
-import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
+import { ParseMaterialPipe } from 'src/common/pipes/parse-material.pipe';
+import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { MaterialService } from './material.service';
-import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
 
 @Controller('material/')
 export class MaterialController {
