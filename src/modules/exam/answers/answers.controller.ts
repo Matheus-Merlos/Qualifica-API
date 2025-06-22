@@ -10,9 +10,9 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ParseExamPipe } from 'src/pipes/parse-exam.pipe';
-import { ParseQuestionPipe } from 'src/pipes/parse-question.pipe';
-import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
+import { ParseExamPipe } from 'src/common/pipes/parse-exam.pipe';
+import { ParseQuestionPipe } from 'src/common/pipes/parse-question.pipe';
+import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { AnswerDTO } from './answers.dto';
 import { AnswersService } from './answers.service';
 
