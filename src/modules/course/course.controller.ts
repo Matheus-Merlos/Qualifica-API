@@ -9,8 +9,8 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ParseCoursePipe } from 'src/pipes/parse-course.pipe';
-import { ParseUserPipe } from 'src/pipes/parse-user.pipe';
+import { ParseCoursePipe } from 'src/common/pipes/parse-course.pipe';
+import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 import { CourseService } from './course.service';
 

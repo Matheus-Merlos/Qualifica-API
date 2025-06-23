@@ -7,7 +7,7 @@ import {
   exam as examTable,
   question as questionTable,
   user,
-} from '../db/schema';
+} from 'src/db/schema';
 import { CreateExamDTO, UpdateExamDTO } from './exam.dto';
 
 @Injectable()
