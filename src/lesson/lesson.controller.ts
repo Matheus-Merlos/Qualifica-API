@@ -6,4 +6,7 @@ export class LessonController {
   constructor(private readonly lessonService: LessonService) {}
 
   @Post()
+  async createLesson(
+    
+  )
 }

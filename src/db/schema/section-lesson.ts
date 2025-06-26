@@ -6,7 +6,10 @@ export default pgTable('section_lesson', {
   id: serial().primaryKey(),
   lesson: integer()
     .notNull()
-    .references(() => lesson.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    .references(() => lesson.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
   section: integer()
     .notNull()
     .references(() => courseSection.id, {

@@ -4,6 +4,7 @@ import { CourseModule } from './course/course.module';
 import { ExamModule } from './exam/exam.module';
 import { LessonModule } from './lesson/lesson.module';
 import { MaterialModule } from './material/material.module';
+<<<<<<< Updated upstream
 import { SectionModule } from './section/section.module';
 import { UserModule } from './user/user.module';
 
@@ -17,6 +18,12 @@ import { UserModule } from './user/user.module';
     LessonModule,
     SectionModule,
   ],
+=======
+import { LessonModule } from './lesson/lesson.module';
+
+@Module({
+  imports: [ExamModule, UserModule, ExamModule, MaterialModule, CourseModule, LessonModule],
+>>>>>>> Stashed changes
   controllers: [AppController],
   providers: [],
 })
