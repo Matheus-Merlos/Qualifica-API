@@ -1,21 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { CourseModule } from './course/course.module';
-import { ExamModule } from './exam/exam.module';
-import { LessonModule } from './lesson/lesson.module';
-import { MaterialModule } from './material/material.module';
-import { SectionModule } from './section/section.module';
-import { UserModule } from './user/user.module';
+import { AnswersModule } from './modules/answers/answers.module';
+import { CourseModule } from './modules/course/course.module';
+import { ExamModule } from './modules/exam/exam.module';
+import { LessonModule } from './modules/lesson/lesson.module';
+import { MaterialModule } from './modules/material/material.module';
+import { ProgressModule } from './modules/progress/progress.module';
+import { SectionModule } from './modules/section/section.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
+    LessonModule,
     ExamModule,
     UserModule,
     ExamModule,
     MaterialModule,
     CourseModule,
-    LessonModule,
     SectionModule,
+    SubscriptionModule,
+    AnswersModule,
+    ProgressModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -7,8 +7,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ParseCoursePipe } from 'src/pipes/parse-course.pipe';
-import { ParseSectionPipe } from 'src/pipes/parse-section.pipe';
+import { ParseCoursePipe } from 'src/common/pipes/parse-course.pipe';
+import { ParseSectionPipe } from 'src/common/pipes/parse-section.pipe';
 import { CreateSectionDTO, PatchSectionDTO } from './section.dto';
 import { SectionService } from './section.service';
 

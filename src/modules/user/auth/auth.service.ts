@@ -3,7 +3,7 @@ import { createHash, randomBytes } from 'crypto';
 import { InferSelectModel, eq } from 'drizzle-orm';
 import * as jwt from 'jsonwebtoken';
 import db from 'src/db';
-import { user as userModel } from '../../db/schema';
+import { user as userModel } from 'src/db/schema';
 import { LoginDTO, RegisterDTO } from './auth.dto';
 import {
   UserExistsException,
