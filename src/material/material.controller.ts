@@ -25,7 +25,7 @@ export class MaterialController {
     return this.materialService.create(userId, createMaterialDto);
   }
 
-  @Get('userId/')
+  @Get(':userId/')
   findAll(@Param('userId', ParseIntPipe, ParseUserPipe) userId: number) {
     return this.materialService.findAllByOwner(userId);
   }
