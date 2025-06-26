@@ -12,7 +12,7 @@ export default pgTable('lesson', {
   id: bigserial({ mode: 'number' }).primaryKey(),
   url: varchar({ length: 255 }).notNull(),
   name: varchar({ length: 255 }).notNull(),
-  duration: time().notNull(),
+  duration: integer().notNull(),
   description: text(),
   owner: integer()
     .notNull()
