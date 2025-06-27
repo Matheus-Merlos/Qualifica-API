@@ -9,7 +9,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ParseLessonPipe } from 'src/common/pipes/parse-lesson.pipe';
-import { ParseSectionPipe } from 'src/common/pipes/parse-section.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { CreateLessonDTO, UpdateLessonDTO } from './lesson.dto';
 import { LessonService } from './lesson.service';
@@ -20,7 +19,7 @@ export class LessonController {
 
   @Post(':userId')
   async create(
-    @Param('userId', ParseIntPipe, ParseSectionPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() createLessonDTO: CreateLessonDTO,
   ) {
     return await this.lessonService.create(userId, createLessonDTO);
@@ -42,7 +41,7 @@ export class LessonController {
     return this.lessonService.update(userId, lessonId, updateLessonDTO);
   }
 
-  @Delete('userId/:lessonId')
+  @Delete(':userId/:lessonId')
   remove(
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Param('lessonId', ParseIntPipe, ParseLessonPipe) examId: number,
