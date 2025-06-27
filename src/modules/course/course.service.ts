@@ -62,6 +62,14 @@ export class CourseService {
     return createdCourse;
   }
 
+  async listByOwner(userId: number) {
+    return await db
+      .select()
+      .from(course)
+      .where(eq(course.owner, userId))
+      .orderBy(asc(course.id));
+  }
+
   async edit(userId: number, courseId: number, dto: PatchCourseDTO) {
     if (
       Object.keys(dto).includes('name') ||
