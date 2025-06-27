@@ -33,6 +33,5 @@ export {
   sectionMaterial,
   studentAnswer,
   subscription,
-  user
+  user,
 };
-
