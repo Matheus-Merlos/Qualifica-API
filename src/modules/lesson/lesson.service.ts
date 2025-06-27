@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { eq, InferSelectModel } from 'drizzle-orm';
+import { asc, eq, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { lesson as lessonModel } from 'src/db/schema';
 import { CreateLessonDTO, UpdateLessonDTO } from './lesson.dto';
@@ -37,8 +37,21 @@ export class LessonService {
     return lesson!;
   }
 
+  async listByOwner(userId: number) {
+    return await db
+      .select()
+      .from(lessonModel)
+      .where(eq(lessonModel.owner, userId))
+      .orderBy(asc(lessonModel.id));
+  }
+
   async retrieve(id: number) {
-    return db.select().from(lessonModel).where(eq(lessonModel.id, id)).limit(1);
+    const [lesson] = await db
+      .select()
+      .from(lessonModel)
+      .where(eq(lessonModel.id, id))
+      .limit(1);
+    return lesson;
   }
 
   async update(

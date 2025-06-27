@@ -32,6 +32,13 @@ export class LessonController {
     return this.lessonService.retrieve(lessonId);
   }
 
+  @Get(':userId/lessons')
+  async getAllByOwner(
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+  ) {
+    return await this.lessonService.listByOwner(userId);
+  }
+
   @Patch(':userId/:lessonId')
   update(
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,

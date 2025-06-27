@@ -30,6 +30,13 @@ export class CourseController {
     return await this.courseService.retrieve(courseId);
   }
 
+  @Get(':userId/courses')
+  async retrieveByOwner(
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+  ) {
+    return await this.courseService.listByOwner(userId);
+  }
+
   @Post(':userId')
   async createCourse(
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
