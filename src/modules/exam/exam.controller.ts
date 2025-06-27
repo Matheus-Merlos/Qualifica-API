@@ -22,6 +22,13 @@ export class ExamController {
     return this.examService.retrieve(examId);
   }
 
+  @Get(':userId/exams')
+  async retrieveByOwner(
+    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+  ) {
+    return await this.examService.listByOwner(userId);
+  }
+
   @Post(':userId')
   create(
     @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
