@@ -18,7 +18,7 @@ import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 @Injectable()
 export class CourseService {
   async search(searchParam: string = '') {
-    return await db
+    const courses = await db
       .select({
         id: course.id,
         name: course.name,
@@ -28,6 +28,27 @@ export class CourseService {
       .where(ilike(course.name, `%${searchParam.replaceAll('-', ' ')}%`))
       .orderBy(asc(course.name))
       .limit(25);
+
+    let index = 0;
+    for (const crs of courses) {
+      const tags: Array<unknown> = [];
+      const courseWithTags = { ...crs, tags };
+
+      const dbTags = await db
+        .select()
+        .from(courseTag)
+        .where(eq(courseTag.course, crs.id));
+
+      const tagNames = dbTags.map((tag) => tag.tag);
+
+      courseWithTags.tags = tagNames;
+
+      courses[index] = courseWithTags;
+
+      index++;
+    }
+
+    return courses;
   }
 
   async retrieve(courseId: number) {
@@ -72,7 +93,7 @@ export class CourseService {
         const { lessonId, materialId, examId } = order;
 
         if (lessonId !== null) {
-          const dbLesson = await db
+          const [dbLesson] = await db
             .select()
             .from(lesson)
             .where(eq(lesson.id, lessonId));
@@ -83,7 +104,7 @@ export class CourseService {
         }
 
         if (materialId !== null) {
-          const dbMaterial = await db
+          const [dbMaterial] = await db
             .select()
             .from(material)
             .where(eq(material.id, materialId));
@@ -94,7 +115,7 @@ export class CourseService {
         }
 
         if (examId !== null) {
-          const dbExam = await db
+          const [dbExam] = await db
             .select()
             .from(exam)
             .where(eq(exam.id, examId));
@@ -107,6 +128,15 @@ export class CourseService {
       courseWithSections.sections[index] = sectionWithResources;
       index++;
     }
+
+    const dbTags = await db
+      .select()
+      .from(courseTag)
+      .where(eq(courseTag.course, courseWithSections.id));
+
+    const tagNames = dbTags.map((tag) => tag.tag);
+
+    courseWithSections['tags'] = tagNames;
 
     return courseWithSections;
   }
