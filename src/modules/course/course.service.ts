@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { asc, eq, ilike, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
-import { course, courseSection, courseTag } from 'src/db/schema';
+import {
+  course,
+  courseSection,
+  courseTag,
+  exam,
+  lesson,
+  material,
+  ordination,
+  sectionExam,
+  sectionLesson,
+  sectionMaterial,
+} from 'src/db/schema';
 import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 
 @Injectable()
@@ -25,13 +36,79 @@ export class CourseService {
       .from(course)
       .where(eq(course.id, courseId));
 
-    dbCourse['sections'] = await db
+    const sections = await db
       .select()
       .from(courseSection)
       .where(eq(courseSection.course, courseId))
       .orderBy(asc(courseSection.order));
 
-    return dbCourse;
+    const courseWithSections = {
+      ...dbCourse,
+      sections,
+    };
+
+    let index = 0;
+    for (const sect of courseWithSections.sections) {
+      const resources: Array<unknown> = [];
+      const sectionWithResources = { ...sect, resources };
+
+      const orders = await db
+        .select({
+          lessonId: sectionLesson.lesson,
+          materialId: sectionMaterial.material,
+          examId: sectionExam.exam,
+        })
+        .from(ordination)
+        .leftJoin(sectionLesson, eq(ordination.sectionLesson, sectionLesson.id))
+        .leftJoin(sectionExam, eq(ordination.sectionExam, sectionExam.id))
+        .leftJoin(
+          sectionMaterial,
+          eq(ordination.sectionMaterial, sectionMaterial.id),
+        )
+        .where(eq(ordination.courseSection, sect.id))
+        .orderBy(asc(ordination.order));
+
+      for (const order of orders) {
+        const { lessonId, materialId, examId } = order;
+
+        if (lessonId !== null) {
+          const dbLesson = await db
+            .select()
+            .from(lesson)
+            .where(eq(lesson.id, lessonId));
+          sectionWithResources.resources.push({
+            type: 'lesson',
+            content: dbLesson,
+          });
+        }
+
+        if (materialId !== null) {
+          const dbMaterial = await db
+            .select()
+            .from(material)
+            .where(eq(material.id, materialId));
+          sectionWithResources.resources.push({
+            type: 'material',
+            content: dbMaterial,
+          });
+        }
+
+        if (examId !== null) {
+          const dbExam = await db
+            .select()
+            .from(exam)
+            .where(eq(exam.id, examId));
+          sectionWithResources.resources.push({
+            type: 'exam',
+            content: dbExam,
+          });
+        }
+      }
+      courseWithSections.sections[index] = sectionWithResources;
+      index++;
+    }
+
+    return courseWithSections;
   }
 
   async create(userId: number, dto: CreateCourseDTO) {
