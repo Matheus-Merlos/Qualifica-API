@@ -72,7 +72,7 @@ export class CourseService {
         const { lessonId, materialId, examId } = order;
 
         if (lessonId !== null) {
-          const dbLesson = await db
+          const [dbLesson] = await db
             .select()
             .from(lesson)
             .where(eq(lesson.id, lessonId));
@@ -83,7 +83,7 @@ export class CourseService {
         }
 
         if (materialId !== null) {
-          const dbMaterial = await db
+          const [dbMaterial] = await db
             .select()
             .from(material)
             .where(eq(material.id, materialId));
@@ -94,7 +94,7 @@ export class CourseService {
         }
 
         if (examId !== null) {
-          const dbExam = await db
+          const [dbExam] = await db
             .select()
             .from(exam)
             .where(eq(exam.id, examId));
