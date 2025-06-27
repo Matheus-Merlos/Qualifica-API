@@ -21,7 +21,6 @@ export class RegisterDTO {
   email: string;
 
   @IsString()
-  @MinLength(8)
   password: string;
 
   @IsString()
@@ -41,6 +40,14 @@ export class LoginDTO {
   email: string;
 
   @IsString()
-  @MinLength(8)
+  password: string;
+}
+
+export class ForgotPasswordDTO {
+  @IsEmail()
+  @MaxLength(255)
+  email: string;
+
+  @IsString()
   password: string;
 }
