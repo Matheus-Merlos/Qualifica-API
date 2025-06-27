@@ -120,6 +120,7 @@ export class CourseService {
           name: dto.name,
           description: dto.description,
           owner: userId,
+          imageUrl: dto.imageUrl,
         })
         .returning();
 
@@ -150,7 +151,8 @@ export class CourseService {
   async edit(userId: number, courseId: number, dto: PatchCourseDTO) {
     if (
       Object.keys(dto).includes('name') ||
-      Object.keys(dto).includes('description')
+      Object.keys(dto).includes('description') ||
+      Object.keys(dto).includes('imageUrl')
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { tags, ...patchCourseObj } = dto;
