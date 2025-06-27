@@ -4,7 +4,7 @@ import { InferSelectModel, eq } from 'drizzle-orm';
 import * as jwt from 'jsonwebtoken';
 import db from 'src/db';
 import { user as userModel } from 'src/db/schema';
-import { LoginDTO, RegisterDTO } from './auth.dto';
+import { ForgotPasswordDTO, LoginDTO, RegisterDTO } from './auth.dto';
 import {
   UserExistsException,
   UserNotFoundException,
@@ -65,6 +65,17 @@ export class AuthService {
     const { passwordHash, salt, ...userReturn } = user;
 
     return { ...userReturn, token };
+  }
+
+  async forgotPassword(body: ForgotPasswordDTO) {
+    const { email, password } = body;
+
+    const salt = this.createSalt();
+
+    await db
+      .update(userModel)
+      .set({ passwordHash: this.digest(`${salt}${password}`), salt })
+      .where(eq(userModel.email, email));
   }
 
   private digest(input: string): string {

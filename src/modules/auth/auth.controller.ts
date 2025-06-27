@@ -8,7 +8,7 @@ import {
   NotFoundException,
   Post,
 } from '@nestjs/common';
-import { LoginDTO, RegisterDTO } from './auth.dto';
+import { ForgotPasswordDTO, LoginDTO, RegisterDTO } from './auth.dto';
 import {
   UserExistsException,
   UserNotFoundException,
@@ -41,5 +41,11 @@ export class AuthController {
       if (error instanceof WrongPasswordException)
         throw new BadRequestException('Wrong password.');
     }
+  }
+
+  @Post('forgotPassword')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() dto: ForgotPasswordDTO) {
+    return await this.authService.forgotPassword(dto);
   }
 }
