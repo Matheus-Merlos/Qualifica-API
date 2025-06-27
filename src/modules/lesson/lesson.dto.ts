@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsBoolean,
   IsNumber,
@@ -7,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateLessonDto {
+export class CreateLessonDTO {
   @IsString()
   @MaxLength(255)
   @MinLength(4)
@@ -19,6 +20,7 @@ export class CreateLessonDto {
   @IsUrl()
   url: string;
 
+  @IsString()
   duration: string;
 
   @IsString()
@@ -26,7 +28,9 @@ export class CreateLessonDto {
   description: string;
 }
 
-export class ProgressDto {
+export class UpdateLessonDTO extends PartialType(CreateLessonDTO) {}
+
+export class ProgressDTO {
   @IsBoolean()
   completed: boolean;
 

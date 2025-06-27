@@ -8,12 +8,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-<<<<<<< HEAD:src/material/material.controller.ts
-import { ParseMaterialPipe } from 'src/pipes/parse-material.pipe';
-=======
 import { ParseMaterialPipe } from 'src/common/pipes/parse-material.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
->>>>>>> master:src/modules/material/material.controller.ts
 import { CreateMaterialDto, UpdateMaterialDto } from './dto/material.dto';
 import { MaterialService } from './material.service';
 
