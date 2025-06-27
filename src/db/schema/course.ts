@@ -5,6 +5,7 @@ export default pgTable('course', {
   id: serial().primaryKey(),
   name: varchar({ length: 512 }),
   description: text(),
+  imageUrl: text(),
   owner: integer()
     .notNull()
     .references(() => user.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
