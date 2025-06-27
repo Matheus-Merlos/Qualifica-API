@@ -1,7 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
-  IsBoolean,
-  IsNumber,
   IsString,
   IsUrl,
   Matches,
@@ -33,17 +31,3 @@ export class CreateLessonDTO {
 }
 
 export class UpdateLessonDTO extends PartialType(CreateLessonDTO) {}
-
-export class ProgressDTO {
-  @IsBoolean()
-  completed: boolean;
-
-  @IsString()
-  idLesson: string;
-
-  @IsString()
-  idUser: string;
-
-  @IsNumber()
-  currentTime: number; //seconds
-}
