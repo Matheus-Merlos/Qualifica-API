@@ -1,7 +1,7 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { NodeHttpHandler } from '@aws-sdk/node-http-handler';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import 'dotenv/config';
 
 @Controller('aws')
@@ -19,10 +19,10 @@ export class AwsController {
     });
   }
 
-  @Get('presigned-url/:fileName/:fileType')
+  @Get('presigned-url')
   async getPresignedURL(
-    @Param('fileName') fileName: string,
-    @Param('fileType') fileType: string,
+    @Query('fileName') fileName: string,
+    @Query('fileType') fileType: string,
   ) {
     const command = new PutObjectCommand({
       Bucket: 'qualifica-mais-thumbnail-bucket',
