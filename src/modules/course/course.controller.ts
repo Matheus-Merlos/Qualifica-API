@@ -8,12 +8,16 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { IsUserPipe } from 'src/common/pipes/is-user.pipe';
 import { ParseCoursePipe } from 'src/common/pipes/parse-course.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { CreateCourseDTO, PatchCourseDTO } from './course.dto';
 import { CourseService } from './course.service';
 
+@UseGuards(AuthGuard)
 @Controller('course')
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
@@ -32,14 +36,14 @@ export class CourseController {
 
   @Get(':userId/courses')
   async retrieveByOwner(
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
   ) {
     return await this.courseService.listByOwner(userId);
   }
 
   @Post(':userId')
   async createCourse(
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Body() body: CreateCourseDTO,
   ) {
     return await this.courseService.create(userId, body);
@@ -47,7 +51,7 @@ export class CourseController {
 
   @Patch(':userId/:courseId')
   async editCourse(
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
     @Body() body: PatchCourseDTO,
   ) {
@@ -56,7 +60,7 @@ export class CourseController {
 
   @Delete(':userId/:courseId')
   async deleteCourse(
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Param('courseId', ParseIntPipe, ParseCoursePipe) courseId: number,
   ) {
     return await this.courseService.destroy(courseId);
