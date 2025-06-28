@@ -5,4 +5,8 @@ resource "cloudflare_dns_record" "api_dns_record" {
   type    = "CNAME"
   proxied = false
   ttl     = 300
+
+  lifecycle {
+    ignore_changes = [ name ]
+  }
 }
