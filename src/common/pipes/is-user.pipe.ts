@@ -29,10 +29,15 @@ export class IsUserPipe implements PipeTransform {
 
     const [, token] = authorization.split(' ');
 
-    const payload = jwt.verify(
-      token,
-      process.env.TOKEN_SECRET!,
-    ) as jwt.JwtPayload & { id?: number };
+    let payload: jwt.JwtPayload & { id?: number };
+    try {
+      payload = jwt.verify(
+        token,
+        process.env.TOKEN_SECRET!,
+      ) as jwt.JwtPayload & { id?: number };
+    } catch {
+      throw new BadRequestException('Invalid authorization token');
+    }
 
     if (payload.id !== value) {
       throw new UnauthorizedException(
