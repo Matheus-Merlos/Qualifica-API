@@ -6,12 +6,15 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 import { ParseCoursePipe } from 'src/common/pipes/parse-course.pipe';
 import { ParseSectionPipe } from 'src/common/pipes/parse-section.pipe';
 import { CreateSectionDTO, PatchSectionDTO } from './section.dto';
 import { SectionService } from './section.service';
 
+@UseGuards(AuthGuard)
 @Controller('course/:courseId/section')
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
