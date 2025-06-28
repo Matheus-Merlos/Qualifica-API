@@ -77,3 +77,57 @@ output "deploy_secret_key" {
   value     = aws_iam_access_key.deployer_access_key.secret
   sensitive = true
 }
+
+
+
+
+
+
+resource "aws_iam_user" "uploader" {
+  name = "qualificamais-uploader"
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
+}
+
+data "aws_iam_policy_document" "uploader_policy" {
+  //Policy para permitir o usuário fazer o upload de images e vídeos
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:ListBucket",
+      "s3:GetObjectAcl",
+      "s3:PutObjectAcl",
+      "s3:GetBucketAcl",
+      "s3:PutBucketAcl"
+    ]
+    resources = [ "*" ]
+  }
+}
+
+resource "aws_iam_policy" "uploader_policy" {
+  name   = "Uploader"
+  policy = data.aws_iam_policy_document.uploader_policy.json
+}
+
+resource "aws_iam_user_policy_attachment" "uploader_attachment" {
+  user       = aws_iam_user.uploader.name
+  policy_arn = aws_iam_policy.uploader_policy.arn
+}
+
+resource "aws_iam_access_key" "uploader_access_key" {
+  user = aws_iam_user.uploader.name
+}
+
+output "uploader_access_key" {
+  value = aws_iam_access_key.uploader_access_key.id
+}
+
+output "uploader_secret_key" {
+  value     = aws_iam_access_key.uploader_access_key.secret
+  sensitive = true
+}
