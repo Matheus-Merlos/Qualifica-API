@@ -9,13 +9,17 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { IsUserPipe } from 'src/common/pipes/is-user.pipe';
 import { ParseExamPipe } from 'src/common/pipes/parse-exam.pipe';
 import { ParseQuestionPipe } from 'src/common/pipes/parse-question.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import { AnswerDTO } from './answers.dto';
 import { AnswersService } from './answers.service';
 
+@UseGuards(AuthGuard)
 @Controller('exam/:examId/answers/:userId')
 export class AnswersController {
   constructor(private readonly answersService: AnswersService) {}
@@ -23,7 +27,7 @@ export class AnswersController {
   @Get()
   async getExamResult(
     @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
   ) {
     return await this.answersService.result(examId, userId);
   }
@@ -31,7 +35,7 @@ export class AnswersController {
   @Post(':questionId')
   async registerAnswer(
     @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Param('questionId', ParseIntPipe, ParseQuestionPipe)
     questionId: number,
     @Body() answerDto: AnswerDTO,
@@ -60,7 +64,7 @@ export class AnswersController {
   @Patch(':questionId')
   async editAnswer(
     @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Param('questionId', ParseIntPipe, ParseQuestionPipe)
     questionId: number,
     @Body() answerDto: AnswerDTO,
@@ -84,7 +88,7 @@ export class AnswersController {
   @Delete(':questionId')
   async deleteAnswer(
     @Param('examId', ParseIntPipe, ParseExamPipe) examId: number,
-    @Param('userId', ParseIntPipe, ParseUserPipe) userId: number,
+    @Param('userId', ParseIntPipe, ParseUserPipe, IsUserPipe) userId: number,
     @Param('questionId', ParseIntPipe, ParseQuestionPipe)
     questionId: number,
   ) {

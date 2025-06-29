@@ -10,6 +10,7 @@ import { ProgressModule } from './modules/progress/progress.module';
 import { SectionModule } from './modules/section/section.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { AwsModule } from './modules/aws/aws.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CommentModule } from './modules/comment/comment.module';
     AnswersModule,
     ProgressModule,
     CommentModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [],
