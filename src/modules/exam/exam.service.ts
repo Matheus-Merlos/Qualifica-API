@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { eq, InferSelectModel } from 'drizzle-orm';
+import { asc, eq, InferSelectModel } from 'drizzle-orm';
 import { TransactionError } from 'src/app.exceptions';
 import db from 'src/db';
 import {
   alternative as alternativeTable,
+  exam,
   exam as examTable,
   question as questionTable,
   user,
@@ -41,6 +42,14 @@ export class ExamService {
     }
 
     return exam;
+  }
+
+  async listByOwner(userId: number) {
+    return await db
+      .select()
+      .from(exam)
+      .where(eq(exam.owner, userId))
+      .orderBy(asc(exam.id));
   }
 
   /* READ → one exam with questions + alternatives */

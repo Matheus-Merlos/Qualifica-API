@@ -5,6 +5,7 @@ import {
   IsArray,
   IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
 } from 'class-validator';
 
@@ -24,6 +25,11 @@ class CreateCourseDTO {
   @ArrayUnique()
   @IsOptional()
   tags: Array<string>;
+
+  @IsString()
+  @IsUrl()
+  @IsOptional()
+  imageUrl: string;
 }
 
 class PatchCourseDTO extends PartialType(CreateCourseDTO) {}

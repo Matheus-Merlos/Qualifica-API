@@ -13,7 +13,15 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request: Request = context.switchToHttp().getRequest();
-    const [type, token] = request.headers['authorization']!.split(' ') ?? [];
+
+    const { authorization } = request.headers;
+    if (!authorization || authorization === undefined) {
+      throw new BadRequestException(
+        "Required header 'authorization' not found in request",
+      );
+    }
+
+    const [type, token] = authorization.split(' ');
 
     if (type !== 'Bearer')
       throw new BadRequestException('Invalid type of authorization token');
