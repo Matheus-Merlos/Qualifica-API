@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ParseCommentPipe } from 'src/common/pipes/parse-comment.pipe';
 import { ParseLessonPipe } from 'src/common/pipes/parse-lesson.pipe';
+import { ParseSectionLesson } from 'src/common/pipes/parse-section-lesson.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import {
   CreateCommentDTO,
@@ -24,7 +25,7 @@ export class CommentController {
 
   @Post()
   createComment(
-    @Param('lessonId', ParseIntPipe, ParseLessonPipe) lessonId: number,
+    @Param('lessonId', ParseIntPipe, ParseSectionLesson) lessonId: number,
     @Body('userId', ParseIntPipe, ParseUserPipe) userId: number,
     @Body() createCommentDTO: CreateCommentDTO,
   ) {
