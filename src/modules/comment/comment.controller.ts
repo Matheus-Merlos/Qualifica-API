@@ -9,7 +9,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { ParseCommentPipe } from 'src/common/pipes/parse-comment.pipe';
-import { ParseLessonPipe } from 'src/common/pipes/parse-lesson.pipe';
 import { ParseSectionLesson } from 'src/common/pipes/parse-section-lesson.pipe';
 import { ParseUserPipe } from 'src/common/pipes/parse-user.pipe';
 import {
@@ -34,7 +33,7 @@ export class CommentController {
 
   @Post('/reply')
   createReply(
-    @Param('lessonId', ParseIntPipe, ParseLessonPipe) lessonId: number,
+    @Param('lessonId', ParseIntPipe, ParseSectionLesson) lessonId: number,
     @Body('parrentComment', ParseIntPipe, ParseCommentPipe)
     parrentCommentId: number,
     @Body('userId', ParseIntPipe, ParseUserPipe) userId: number,
@@ -50,7 +49,7 @@ export class CommentController {
 
   @Get('/comment')
   findAllByLesson(
-    @Param('lessonId', ParseIntPipe, ParseLessonPipe) lessonId: number,
+    @Param('lessonId', ParseIntPipe, ParseSectionLesson) lessonId: number,
   ) {
     return this.commentService.findAllByLesson(lessonId);
   }
