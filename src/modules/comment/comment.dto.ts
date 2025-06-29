@@ -24,4 +24,4 @@ export class ReplyCommentDTO {
   parentId: string;
 }
 
-export class UpdateReplyDTO extends PartialType(ReplyCommentDTO) {}
+export class UpdateCommentDTO extends PartialType(ReplyCommentDTO) {}
