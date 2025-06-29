@@ -79,8 +79,11 @@ export class ProgressService {
               ),
             );
 
-          const hasCompletedLesson =
-            currentUserProgress.timedWatched > requiredProgress;
+          const timeWatched = currentUserProgress.timedWatched
+            ? currentUserProgress.timedWatched
+            : 0;
+
+          const hasCompletedLesson = timeWatched > requiredProgress;
           sectionWithResources.resources.push({
             type: 'lesson',
             completed: hasCompletedLesson,
