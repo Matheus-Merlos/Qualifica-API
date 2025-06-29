@@ -44,10 +44,12 @@ export class ProgressService {
 
       const orders = await db
         .select({
-          sectionLessonId: sectionLesson.id,
           lessonId: sectionLesson.lesson,
           materialId: sectionMaterial.material,
           examId: sectionExam.exam,
+          sectionLessonId: sectionLesson.id,
+          sectionMaterialId: sectionMaterial.id,
+          sectionExamId: sectionExam.id,
         })
         .from(ordination)
         .leftJoin(sectionLesson, eq(ordination.sectionLesson, sectionLesson.id))
@@ -60,7 +62,14 @@ export class ProgressService {
         .orderBy(asc(ordination.order));
 
       for (const order of orders) {
-        const { lessonId, materialId, examId } = order;
+        const {
+          lessonId,
+          materialId,
+          examId,
+          sectionLessonId,
+          sectionMaterialId,
+          sectionExamId,
+        } = order;
 
         if (lessonId !== null) {
           const [dbLesson] = await db
@@ -85,7 +94,7 @@ export class ProgressService {
           sectionWithResources.resources.push({
             type: 'lesson',
             completed: hasCompletedLesson,
-            content: dbLesson,
+            content: { ...dbLesson, sectionLessonId },
           });
         }
 
@@ -96,7 +105,7 @@ export class ProgressService {
             .where(eq(material.id, materialId));
           sectionWithResources.resources.push({
             type: 'material',
-            content: dbMaterial,
+            content: { ...dbMaterial, sectionMaterialId },
           });
         }
 
@@ -141,7 +150,7 @@ export class ProgressService {
           sectionWithResources.resources.push({
             type: 'exam',
             completed: hasCompletedExam,
-            content: dbExam,
+            content: { ...dbExam, sectionExamId },
           });
         }
       }

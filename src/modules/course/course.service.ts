@@ -79,6 +79,9 @@ export class CourseService {
           lessonId: sectionLesson.lesson,
           materialId: sectionMaterial.material,
           examId: sectionExam.exam,
+          sectionLessonId: sectionLesson.id,
+          sectionMaterialId: sectionMaterial.id,
+          sectionExamId: sectionExam.id,
         })
         .from(ordination)
         .leftJoin(sectionLesson, eq(ordination.sectionLesson, sectionLesson.id))
@@ -91,7 +94,14 @@ export class CourseService {
         .orderBy(asc(ordination.order));
 
       for (const order of orders) {
-        const { lessonId, materialId, examId } = order;
+        const {
+          lessonId,
+          materialId,
+          examId,
+          sectionLessonId,
+          sectionMaterialId,
+          sectionExamId,
+        } = order;
 
         if (lessonId !== null) {
           const [dbLesson] = await db
@@ -100,7 +110,7 @@ export class CourseService {
             .where(eq(lesson.id, lessonId));
           sectionWithResources.resources.push({
             type: 'lesson',
-            content: dbLesson,
+            content: { ...dbLesson, sectionLessonId },
           });
         }
 
@@ -111,7 +121,7 @@ export class CourseService {
             .where(eq(material.id, materialId));
           sectionWithResources.resources.push({
             type: 'material',
-            content: dbMaterial,
+            content: { ...dbMaterial, sectionMaterialId },
           });
         }
 
@@ -122,7 +132,7 @@ export class CourseService {
             .where(eq(exam.id, examId));
           sectionWithResources.resources.push({
             type: 'exam',
-            content: dbExam,
+            content: { ...dbExam, sectionExamId },
           });
         }
       }
