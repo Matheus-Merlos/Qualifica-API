@@ -188,6 +188,24 @@ export class ProgressService {
       totalSeconds = hours * 3600 + minutes * 60 + seconds;
     }
 
+    const [current] = await db
+      .select()
+      .from(progression)
+      .where(
+        and(
+          eq(progression.sectionLesson, lessonId),
+          eq(progression.user, userId),
+        ),
+      );
+
+    if (!current) {
+      await db.insert(progression).values({
+        timedWatched: totalSeconds,
+        sectionLesson: lessonId,
+        user: userId,
+      });
+    }
+
     await db
       .update(progression)
       .set({ timedWatched: totalSeconds })
