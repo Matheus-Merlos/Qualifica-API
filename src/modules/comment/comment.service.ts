@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { eq, InferSelectModel } from 'drizzle-orm';
 import db from 'src/db';
 import { comment as commentModel, user as userModel } from 'src/db/schema';
 import { CreateCommentDTO, UpdateCommentDTO } from './comment.dto';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Injectable()
 export class CommentService {
   async create(
