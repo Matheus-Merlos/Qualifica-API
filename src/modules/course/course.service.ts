@@ -23,6 +23,7 @@ export class CourseService {
         id: course.id,
         name: course.name,
         description: course.description,
+        imageUrl: course.imageUrl,
       })
       .from(course)
       .where(ilike(course.name, `%${searchParam.replaceAll('-', ' ')}%`))
