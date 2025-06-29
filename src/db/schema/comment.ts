@@ -1,16 +1,10 @@
 import { relations } from 'drizzle-orm';
-import {
-  bigserial,
-  integer,
-  pgTable,
-  text,
-  timestamp,
-} from 'drizzle-orm/pg-core';
+import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import sectionLesson from './section-lesson';
 import user from './user';
 
 const comment = pgTable('comment', {
-  id: bigserial({ mode: 'number' }).primaryKey(),
+  id: serial().primaryKey(),
   sectionLesson: integer()
     .notNull()
     .references(() => sectionLesson.id, {

@@ -1,9 +1,18 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateCommentDTO {
-  @IsString()
-  userId: string;
+  @IsNumber()
+  @IsInt()
+  @IsPositive()
+  userId: number;
 
   @IsString()
   @MaxLength(511)
@@ -11,8 +20,10 @@ export class CreateCommentDTO {
 }
 
 export class ReplyCommentDTO {
-  @IsString()
-  userId: string;
+  @IsNumber()
+  @IsInt()
+  @IsPositive()
+  userId: number;
 
   @IsString()
   @MaxLength(511)
