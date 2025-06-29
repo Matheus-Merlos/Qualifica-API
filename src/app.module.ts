@@ -9,6 +9,7 @@ import { MaterialModule } from './modules/material/material.module';
 import { ProgressModule } from './modules/progress/progress.module';
 import { SectionModule } from './modules/section/section.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     SubscriptionModule,
     AnswersModule,
     ProgressModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [],

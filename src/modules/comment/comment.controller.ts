@@ -18,7 +18,7 @@ import {
 } from './comment.dto';
 import { CommentService } from './comment.service';
 
-@Controller('/:lessonId')
+@Controller('/comment/:lessonId')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
