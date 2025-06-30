@@ -121,3 +121,14 @@ resource "aws_s3_bucket_policy" "thumbnail_bucket_policy" {
   })
 }
 
+resource "aws_s3_bucket_cors_configuration" "thumbnail_bucket_cors_configuration" {
+  bucket = aws_s3_bucket.thumbnail_bucket.id
+
+  cors_rule {
+    allowed_headers = [ "*" ]
+    allowed_methods = [ "GET", "POST", "PUT", "DELETE", "HEAD" ]
+    allowed_origins = [ "*" ]
+    expose_headers  = [ "" ]
+    max_age_seconds = 3000
+  }
+}

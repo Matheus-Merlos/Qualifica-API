@@ -33,4 +33,20 @@ export class AwsController {
     const url = await getSignedUrl(this.s3Client, command, { expiresIn: 120 });
     return { url };
   }
+
+  @Get('lesson-bucket/presigned-url')
+  async getLessonBucketURL(
+    @Query('fileName') fileName: string,
+    @Query('fileType') fileType: string,
+  ) {
+    const command = new PutObjectCommand({
+      Bucket: 'qualifica-mais-lesson-bucket',
+      Key: fileName,
+      ContentType: fileType,
+    });
+
+    //Aqui o expiresIn é maior porque é um vídeo, aí pode demorar mais para fazer upload
+    const url = await getSignedUrl(this.s3Client, command, { expiresIn: 480 });
+    return { url };
+  }
 }
